@@ -5,7 +5,7 @@
 OUT_DIR ?= latex.out
 
 # Opções passadas para latexmk.
-LATEXMK_FLAGS ?= -pdf
+LATEXMK_FLAGS ?= -pdf -shell-escape
 
 TEX_SRCS := $(shell find . -type f -name "*.tex")
 BIB_SRCS := $(shell find . -type f -name "*.bib")
@@ -13,14 +13,18 @@ IMG_SRCS := $(shell find . -type f -name "*.jpg" -or -name "*.png" -or -name "*.
 
 SRCS := $(TEX_SRCS) $(BIB_SRCS) $(IMG_SRCS)
 
-# Compilar a versão final do PDF.
-pdf: $(OUT_DIR)/tese.pdf
+TESE = $(OUT_DIR)/tese.pdf
+
+pdf: $(TESE)
 
 clean:
 	@rm -rf $(OUT_DIR)
 
-$(OUT_DIR)/tese.pdf: $(SRCS)
+open: $(TESE)
+	@zathura $<
+
+$(TESE): $(SRCS)
 	@rm -rf $(OUT_DIR)
 	@latexmk $(LATEXMK_FLAGS) -output-directory=$(OUT_DIR) tese.tex
 
-PHONY: pdf clean
+PHONY: open pdf clean
