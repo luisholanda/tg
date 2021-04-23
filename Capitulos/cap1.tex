@@ -30,7 +30,7 @@ depende do tipo de API está sendo construida, alguns exemplos são:
   \textit{Protocol Buffers} \cite{googl:protobuf}: usada para definir APIs que usam
     o protocolo gRPC \cite{googl:grpc}. O nome se refere tanto a IDL usada para a
     especificação quanto para o formato binário usado para transmitir as mensagens.
-    Um exemplo de um arquivo em Protocol Buffers é apresentado em.
+    Um exemplo de um arquivo em Protocol Buffers é apresentado em \cref{anex:protobuf-example}.
 \end{itemize}
 
 Existem diversas vantagens em usar uma IDL, entre elas:
@@ -76,8 +76,8 @@ Existem diversas vantagens em usar um gerador de API, entre elas:
   implementar.
 \end{enumerate}
 
-Existem diversos exemplos de geradores de APIs, alguns exemplos são \cite{openapi:gen}
-e \cite{googl:protoc}.
+Existem diversos exemplos de geradores de APIs, alguns são \cite{openapi:gen} e
+\cite{googl:protobuf}.
 
 \section{ORMs}
 
@@ -148,16 +148,18 @@ presente para cada linguagem, e também as diversas formas de se gerar a interfa
 de comunicação, geradores convencionais não conseguiriam adicionar suporte para
 todas as combinações possíveis.
 
-Outro problema em como os geradores são implementados hoje é que eles não são
-\textit{extensíveis}: caso uma organização queria adicionar algo a mais no processo
-de geração, é preciso modificar diretamente o código-fonte do gerador, o que gera
-um grande custo operacional. Alguns exemplos de modificações possíveis:
+Outro problema em como os geradores são implementados hoje é que eles possuem
+suporte limitado a extensões externas ao código-fonte. Dependendo do gerador
+utilizado, é necessário implementar um \textit{novo gerador}, o que gera um grande
+custo operacional. Alguns exemplos de modificações possíveis:
 
 \begin{itemize}
 \item
   Geração automática de testes para as operações \cite{9159071}.
 \item
   Validação automática de propriedades das mensagens \cite{envoy:protoc-gen-validate}.
+\item
+  Integração com ORMs ou outras bibliotecas.
 \end{itemize}
 
 Devido a esses problemas, muitas organizações deixam de usar essas ferramentas, os
@@ -175,3 +177,7 @@ extras relacionadas com ajustes da implementação para que essa seguisse a espe
 Na tentativa de solucionar esse problema, esse trabalho propõe um novo modelo de
 gerador de APIs, que pode ser extendido para suportar qualquer linguagem ou funcionalidade
 nova sem a necessidade de modificar o código-fonte do mesmo.
+
+Esse trabalho é estruturado como se segue. \cref{cap:past-works} faz uma análise
+de trabalhos anteriores. \cref{cap:proposal} apresenta, de forma detalhada, o que
+foi construído e a metodologia de análise.

@@ -1,47 +1,47 @@
-%%% Exemplo de utilização da classe ITA
+%%% exemplo de utilização da classe ita
 %%%
-%%%   por        Fábio Fagundes Silveira   -  ffs [at] ita [dot] br
-%%%              Benedito C. O. Maciel     -  bcmaciel [at] ita [dot] br
-%%%              Giovani Volnei Meinertz   -  giovani [at] ita [dot] br
-%%%    	         Hudson Alberto Bode       -  bode [at] ita [dot]br
-%%%    	         P. I. Braga de Queiroz    -  pi [at] ita [dot] br
-%%%    	         Jorge A. B. Gripp         -  gripp [at] ita [dot] br
-%%%    	         Juliano Monte-Mor         -  jamontemor [at] yahoo [dot] com [dot] br
-%%%    	         Tarcisio A. B. Gripp      -  tarcisio.gripp [at] gmail [dot] com
+%%%   por        fábio fagundes silveira   -  ffs [at] ita [dot] br
+%%%              benedito c. o. maciel     -  bcmaciel [at] ita [dot] br
+%%%              giovani volnei meinertz   -  giovani [at] ita [dot] br
+%%%    	         hudson alberto bode       -  bode [at] ita [dot]br
+%%%    	         p. i. braga de queiroz    -  pi [at] ita [dot] br
+%%%    	         jorge a. b. gripp         -  gripp [at] ita [dot] br
+%%%    	         juliano monte-mor         -  jamontemor [at] yahoo [dot] com [dot] br
+%%%    	         tarcisio a. b. gripp      -  tarcisio.gripp [at] gmail [dot] com
 %%%
-%%%   Versão para overleaf:
-%%%   por           Alejandro A. Rios Cruz - aarc.88@gmail.com
-%%%                 Saulo Gómez            - sagomezs@unal.edu.co
-%%%  IMPORTANTE: O texto contido neste exemplo nao significa absolutamente nada.  :-)
-%%%              O intuito aqui eh demonstrar os comandos criados na classe e suas
+%%%   versão para overleaf:
+%%%   por           alejandro a. rios cruz - aarc.88@gmail.com
+%%%                 saulo gómez            - sagomezs@unal.edu.co
+%%%  importante: o texto contido neste exemplo nao significa absolutamente nada.  :-)
+%%%              o intuito aqui eh demonstrar os comandos criados na classe e suas
 %%%              respectivas utilizacoes.
 %%%
-%%%  Tese.tex  2016-08-25
-%%%  $HeadURL: http://www.apgita.org.br/apgita/teses-e-latex.php $
+%%%  tese.tex  2016-08-25
+%%%  $headurl: http://www.apgita.org.br/apgita/teses-e-latex.php $
 %%%
-%%% ITALUS
-%%% Instituto Tecnológico de Aeronáutica --- ITA, Sao Jose dos Campos, Brasil
+%%% italus
+%%% instituto tecnológico de aeronáutica --- ita, sao jose dos campos, brasil
 %%%                   http://groups.yahoo.com/group/italus/
-%%% Discussion list: italus {at} yahoogroups.com
+%%% discussion list: italus {at} yahoogroups.com
 %%%
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-% Para alterar o TIPO DE DOCUMENTO, preencher a linha abaixo \documentclass[?]{?}
-%   \documentclass[tg]{ita}			= Trabalho de Graduacao
-%   \documentclass[tgfem]{ita}	= Para Engenheiras
-%   								msc     		= Dissertacao de Mestrado
-%   								mscfem   		= Para Mestras
-%   								dsc      		= Tese de Doutorado
-%   								dscfem   		= Para Doutoras
-%   								quali    		= Exame de Qualificacao
-%   								qualifem 		= Exame de Qualificacao para Doutoras
-% Para 'Draft Version'/'Versao Preliminar' com data no rodape, adicionar 'dv':
+% para alterar o tipo de documento, preencher a linha abaixo \documentclass[?]{?}
+%   \documentclass[tg]{ita}			= trabalho de graduacao
+%   \documentclass[tgfem]{ita}	= para engenheiras
+%   								msc     		= dissertacao de mestrado
+%   								mscfem   		= para mestras
+%   								dsc      		= tese de doutorado
+%   								dscfem   		= para doutoras
+%   								quali    		= exame de qualificacao
+%   								qualifem 		= exame de qualificacao para doutoras
+% para 'draft version'/'versao preliminar' com data no rodape, adicionar 'dv':
 %   \documentclass[dsc, dv]{ita}
-% Para trabalhos em Inglês, adicionar 'eng':
+% para trabalhos em inglês, adicionar 'eng':
 %   \documentclass[dsc, eng]{ita}
 %		\documentclass[dsc, eng, dv]{ita}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\documentclass[tg]{ita}    % ITA.cls based on standard book.cls
-% Quando alterar a classe, por exemplo de [msc] para [msc, eng]) rode mais uma vez o botão BUILD OUTPUT caso haja erro
+\documentclass[tg]{ita}    % ita.cls based on standard book.cls
+% quando alterar a classe, por exemplo de [msc] para [msc, eng]) rode mais uma vez o botão build output caso haja erro
 \usepackage{ae}
 \usepackage{graphicx}
 \usepackage{epsfig}
@@ -51,7 +51,7 @@
 \usepackage{multirow}
 \usepackage{float}
 \usepackage{amsthm}
-\usepackage{url}         % formats URL addresses properly
+\usepackage{url}         % formats url addresses properly
 \usepackage{appendix}    % allows appendix section to be included
 \usepackage{lscape}      % allows a page to be rendered in landscape mode
 \usepackage{multicol}    % allows text in multi columns
@@ -65,6 +65,7 @@
 \renewcommand\listingscaption{Código}
 
 \newrefformat{anex}{Anexo~\ref{#1}}
+\newrefformat{cap}{Capítulo~\ref{#1}}
 \newrefformat{lst}{Código~\ref{#1}}
 
 % Make ref autocomplete work.
@@ -147,6 +148,11 @@
 \chapter{Introdução}
 \input{Capitulos/cap1}
 
+\chapter{Trabalhos Anteriores}\label{cap:past-works}
+\input{Capitulos/cap2}
+
+\chapter{Proposta}\label{cap:proposal}
+
 
 % REFERENCIAS BIBLIOGRAFICAS
 \renewcommand\bibname{\itareferencesnamebabel} %renomear título do capítulo referências
@@ -184,6 +190,7 @@
 \FRDitaOpcoes{N}{O}
 % Cria o formulario
 %\itaFRD
+
 
 \end{document}
 

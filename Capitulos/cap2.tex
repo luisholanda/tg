@@ -1,0 +1,140 @@
+Durante o desenvolvimento desse trabalho, analisamos diversos trabalhos já publicados
+relacionados tanto a geradores de APIs e extensões a IDLs.
+
+\cite{openapi:gen} apresenta uma vasta gama de geradores baseados na IDL OpenAPI. No
+momento de escrita desse trabalho, ele apresenta 66 geradores de clientes para 33
+linguagens e 41 geradores de servidores para 16 linguagens. Esse é o principal programa
+utilizado para gerar código em projetos que usam OpenAPI para especificação de suas
+APIs.
+
+Analisando o código-fonte e documentação do projeto, chegamos as seguintes conclusões:
+
+\begin{itemize}
+\item
+  Os geradores funcionam com base em um modelo genérico baseado em OpenAPI. O processo
+  de geração ocorre da seguinte maneira:
+
+  \begin{enumerate}
+  \item
+    O programa lê a especificação OpenAPI e a transforma no modelo genérico.
+  \item
+    A classe do gerador modifica esse modelo da forma que precisar, possivelmente
+    adicionando propriedades especificas para ele.
+  \item
+    O programa pega o modelo final e passa para um motor de \textit{templates}, que
+    carrega os templates do gerador específico e os renderiza. O resultado dessa
+    etapa é o código final.
+  \end{enumerate}
+
+  Esse fato pode acabar por limitar a expressividade do gerador, pois o modelo
+  OpenAPI não é capaz de expressar, de forma simples, todos os detalhes envolvidos
+  em uma linguagem de programação.
+\item
+  Apesar de ser possível criar um novo gerador customizado, por exemplo para uma
+  linguagem que o projeto não suporte, sem a necessidade de modificar o programa
+  em si, os geradores são estruturas monolíticas. Não é possível implementar uma
+  funcionalidade nova, e.g. um novo processo de validação, que possa ser usado por
+  todos os geradores. Isso limitida significativamente a extensibilidade do projeto,
+  além de aumentar a carga operacional nessas situações.
+\end{itemize}
+
+\cite{googl:protobuf} é o compilador de Protocol Buffers. Ele apresenta uma estrutura
+bastante interessante em questão de extensibilidade: o sistema de \textit{plugins}.
+Um \textit{plugin} é um programa que recebe uma mensagem \texttt{CodeGeneratorRequest}
+como entrada e escreve na saida uma mensagem \texttt{CodeGeneratorResponse}. As
+definições dessas duas mensagens são apresentadas em \cref{lst:code-gen-req} e
+\cref{lst:code-gen-res}, respectivamente.
+
+\begin{listing}[ht]
+\caption{Especificação de \texttt{CodeGeneratorRequest}}
+\label{lst:code-gen-req}
+\begin{minted}{protobuf}
+message CodeGeneratorRequest {
+  repeated string file_to_generate = 1;
+
+  optional string parameter = 2;
+
+  repeated FileDescriptorProto proto_file = 15;
+
+  optional Version compiler_version = 3;
+}
+\end{minted}
+\end{listing}
+
+\begin{listing}[ht]
+\caption{Especificação de \texttt{CodeGeneratorResponse}}
+\label{lst:code-gen-res}
+\begin{minted}{protobuf}
+// The plugin writes an encoded CodeGeneratorResponse to stdout.
+message CodeGeneratorResponse {
+  optional string error = 1;
+
+  message File {
+    optional string name = 1;
+
+    optional string insertion_point = 2;
+
+    optional string content = 15;
+  }
+
+  repeated File file = 15;
+}
+\end{minted}
+\end{listing}
+
+Esse sistema é interessante por dois fatores:
+
+\begin{itemize}
+\item
+  É muito simples adicionar suporte a uma nova linguagem, precisamos apenas
+  implementar um \textit{plugin} para ela. Ponto em comum com o trabalho anterior.
+\item
+  Usando o campo \texttt{file.insertion\_point}, é possível injetar conteúdo
+  de um gerador em outro. O segundo gerador pode adicionar esses pontos no
+  arquivo gerado por ele, permitindo que outros geradores modifiquem o resultado
+  final.
+
+  Isso soluciona, em parte, o problema com adicionar novas funcionalidades em
+  um gerador presente em \cite{openapi:gen}. Dois problemas ainda persistem:
+
+  \begin{enumerate}
+  \item
+    Estamos limitados aos pontos de inserção disponibilizados pelo gerador, o
+    que pode variar de uma linguagem para outra. O quão grave é esse problema
+    depende do que se quer fazer com o \textit{plugin} e qual é a linguagem objeto.
+  \item
+    O sistema trabalha em termos de texto (campo \texttt{file.content}). Isso
+    limita o quão genérico nossa funcionalidade pode ser, e.g. um \textit{plugin} de
+    validação poderia ser genérico caso o resultado fosse mais estruturado.
+
+    Um exemplo de plugin que poderia ser genérico é \cite{envoy:protoc-gen-validate},
+    que provê uma extensão para diversas validações. Hoje, ela é limitada para
+    as linguagens Go, C++ e Java. Caso o resultado fosse mais estruturado, seria
+    possível implementar tal funcionalidade de forma genérica para uma grande
+    quantidade de linguagens.
+  \end{enumerate}
+\end{itemize}
+
+\cite{9159071} se propõe a resolver um problema diferente dos trabalhos anteriores:
+ele gera testes baseado em \textit{Property Based Testing} \cite{10.1145/351240.351266}
+a partir de especificações OpenAPI que validam que as respostas da API seguem as
+propriedades e formatos especificados. O programa é capaz de gerar esses testes
+sem a necessidade de nenhuma extensão a especificação.
+
+\cite{sferruzza:hal-01868498} propõe extensões e um gerador para OpenAPI que é
+capaz de modelar como uma operação é implementada. O trabalho cria o conceito de
+\textit{componentes atômicos e compostos}: componentes atômicos recebem parâmetros
+e podem gerar novos valores e componentes compostos fazem a composição de diversos
+componentes para definir uma dada lógica. O programa então é capaz de validar que
+as definições e uso dos componentes são válidas, tanto em questão de todas as
+variáveis estarem disponíveis quanto que os tipos estão corretos. O gerador então
+é capaz de gerar código que define esses componentes.
+
+Por fim, \cite{r2c:semgrep} é uma ferramenta de análise estática que suporta uma
+quantidade impressionante de linguagens. O diferencial dessa ferramenta é que
+o usuário pode criar novas regras de análise utilizando uma DSL implementada sobre
+YAML, permitindo com que a mesma regra seja aplicada em diversas linguagens. Isso
+é possível pois todas as linguagens que ela suporta são convertidas para \textit{
+uma mesma linguagem intermediária} antes das regras serem aplicadas. Essa funcionalidade
+é similar a situação em que queremos implementar uma funcionalidade no nosso gerador
+de forma independente da linguagem objeto.
