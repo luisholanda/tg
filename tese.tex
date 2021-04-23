@@ -60,9 +60,17 @@
 \usepackage{float}
 \usepackage{placeins}
 \usepackage[outputdir=latex.out]{minted}
+\usepackage{prettyref}
+
+\renewcommand\listingscaption{Código}
+
+\newrefformat{anex}{Anexo~\ref{#1}}
+\newrefformat{lst}{Código~\ref{#1}}
+
+% Make ref autocomplete work.
+\newcommand{\cref}[1]{\prettyref{#1}}
 
 \usemintedstyle{friendly}
-
 
 %HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 %\usepackage{subfigure}
@@ -147,8 +155,12 @@
 \annex
 \chapter{Exemplo em WSDL}\label{anex:wsdl-example}
 \input{Anexos/anexoA.tex}
+
 \chapter{Exemplo em OpenAPI}\label{anex:openapi-example}
 \input{Anexos/anexoB.tex}
+
+\chapter{Exemplo em Protocol Buffers}\label{anex:protobuf-example}
+\input{Anexos/anexoC.tex}
 
 % Glossario
 %\itaglossary
@@ -174,4 +186,5 @@
 %\itaFRD
 
 \end{document}
+
 % Fim do Documento. O massacre acabou!!! :-)
