@@ -1,0 +1,34 @@
+A hipótese base desse trabalho é que, baseado nos projetos mencionados anteriormente,
+é possível implementar um novo modelo de gerador que seja muito mais extensível, amigável
+e que consiga implementar funcionalidades mais genéricas. Além disso, outra hipótese
+é que com base nessa extensibilidade, conseguimos aumentar de forma considerável a
+eficiência de um time de desenvolvimento, utilizando o gerador para automatizar
+trabalhos repetitivos.
+
+O objetivo desse trabalho então é implementar esse novo modelo, além de uma série de
+funcionalidades a partir do sistema de extensibilidade. Para validar que atingimos nosso
+objetivo, implementaremos uma nova API em nível prova de conceito utilizando esse gerador,
+e verificaremos o que seria necessário a mais para a implementação, caso não tivessemos
+acesso a tal ferramenta.
+
+A \cref{tbl:cronograma} apresenta uma estimativa das etapas a serem realizadas durante
+o desenvolvimento do trabalho.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{c | c}
+Passo & Período Estimado \\
+\hline
+\textit{Parser Protocol Buffers} e Linguagem Intermediária & Maio \\
+Análises Semânticas sobre a LI & Junho \\
+Implementação da interface de \textit{plugins} & Julho \\
+\textit{Plugin} para HTTP & Inicio Agosto \\
+\textit{Plugin} para ORM & Agosto/Setembro \\
+Gerador para linguagem-objeto escolhida & Final Setembro \\
+Implementação da nova API em POC & Inicio Outubro \\
+Análise dos resultados & Final de Outubro
+\end{tabular}
+\caption{Cronograma de atividades}
+\label{tbl:cronograma}
+\end{table}
+

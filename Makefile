@@ -13,7 +13,8 @@ IMG_SRCS := $(shell find . -type f -name "*.jpg" -or -name "*.png" -or -name "*.
 
 SRCS := $(TEX_SRCS) $(BIB_SRCS) $(IMG_SRCS)
 
-TESE = $(OUT_DIR)/tese.pdf
+MAIN_TEX = tg.tex
+TESE = $(OUT_DIR)/tg.pdf
 
 pdf: $(TESE)
 
@@ -25,6 +26,6 @@ open: $(TESE)
 
 $(TESE): $(SRCS)
 	@rm -rf $(OUT_DIR)
-	@latexmk $(LATEXMK_FLAGS) -output-directory=$(OUT_DIR) tese.tex
+	@latexmk $(LATEXMK_FLAGS) -output-directory=$(OUT_DIR) $(MAIN_TEX)
 
 PHONY: open pdf clean

@@ -12,9 +12,9 @@ mapping} (ORMs) são exemplos de ferramentas que caem nessa categoria.
 \section{\textit{Interface Definition Languages}}
 
 APIs são normalmente especificadas em \textit{Interface Definition Languages}
-(IDLs). Essas linguagens possuem construções que facilitam a construção de uma
+(IDLs). Essas linguagens possuem construções que facilitam o desenvolvimento de uma
 especificação, em relação a operações, entradas, saídas e erros. Qual é usada
-depende do tipo de API está sendo construida, alguns exemplos são:
+depende do tipo de API está sendo construída, alguns exemplos são:
 
 \begin{itemize}
 \item
@@ -23,13 +23,13 @@ depende do tipo de API está sendo construida, alguns exemplos são:
     Um exemplo de um arquivo WSDL é apresentado em \cref{anex:wsdl-example}.
 \item
   \textit{OpenAPI} \cite{openapi:spec}: comumente usada para definir APIs que usam
-    o protocolo HTTP, informalmente chamadas de \textit{"Restful APIs"} em referência
-    ao conceito de REST definido em \cite{10.5555/932295}. É uma linguagem baseada
-    em YAML. um exemplo de um arquivo OpenAPI é apresentado em \cref{anex:openapi-example}.
+    o protocolo HTTP \cite{rfc2616}, informalmente chamadas de \textit{"Restful APIs"}
+    em referência ao conceito de REST definido em \cite{10.5555/932295}. É uma linguagem
+    baseada em YAML. Um exemplo de um arquivo OpenAPI é apresentado em \cref{anex:openapi-example}.
 \item
   \textit{Protocol Buffers} \cite{googl:protobuf}: usada para definir APIs que usam
-    o protocolo gRPC \cite{googl:grpc}. O nome se refere tanto a IDL usada para a
-    especificação quanto para o formato binário usado para transmitir as mensagens.
+    o protocolo gRPC \cite{googl:grpc}. O nome se refere tanto à IDL usada para a
+    especificação quanto para ao formato binário usado para transmitir as mensagens.
     Um exemplo de um arquivo em Protocol Buffers é apresentado em \cref{anex:protobuf-example}.
 \end{itemize}
 
@@ -38,19 +38,18 @@ Existem diversas vantagens em usar uma IDL, entre elas:
 \begin{enumerate}
 \item
   A comunicação entre diferentes times (possivelmente em diferente organizações) que
-  precisam interarir via API é mais simples, já que todos os detalhes de interface
+  precisam interagir via API é mais simples, já que todos os detalhes de interface
   estão especificados em um formato padrão.
 \item
-  Pelo mesmo motivo do anterior, é muito mais simples construir ferramentas de análise
-  sobre a especificação, como geradores de código, validadores, ferramentas de teste,
-  etc.
+  Pro esse motivo, é muito mais simples construir ferramentas de análise sobre a
+  especificação, como geradores de código, validadores, ferramentas de teste, etc.
 \end{enumerate}
 
 \section{Geradores de APIs}
 
 Geradores de APIs são ferramentas que, via uma especificação de uma API, conseguem
 produzir código-fonte em uma linguagem de programação tanto para realizar requisições
-a essa API, quanto também conseguem gerar uma base para a implementação da API em si.
+a essa API, quanto para gerar uma base para a implementação da API em si.
 O código gerado em ambos os casos contém tanto métodos para as operações suportadas
 pela API quanto as estruturas de dados necessárias para interfacear com as mensagens
 a serem transmitidas.
@@ -59,19 +58,19 @@ Existem diversas vantagens em usar um gerador de API, entre elas:
 
 \begin{enumerate}
 \item
-  Como toda a parte dos modelos são geradas, tanto para o servidor quanto para o
-  cliente, há uma significativa redução no volume de linhas de código-fonte do sistema,
-  reduzindo a possibilidade de defeitos \cite{5010260} e facilitando o entendimento do
-  projeto por novos desenvolvedores.
+  Como toda a parte dos modelos são geradas, servidor ou cliente, há uma significativa
+  redução no volume de linhas de código-fonte do sistema, reduzindo a possibilidade
+  de defeitos \cite{5010260} e facilitando o entendimento do projeto por novos
+  desenvolvedores.
 \item
   Como o código é gerado a partir da especificação, sabemos que a implementação
   vai estar de acordo com a interface especificada, permitindo que o programador
-  foque em implementar a lógica de cada operação, ao invés de se preocupar se
-  as estruturas estão de acordo. No caso de consumidores, eles poupam o trabalho
-  de ter que implementar um código de integração com a API, que pode conter erros
-  e ser difícil de manter, principalmente com relação a mudanças e adições na API.
+  foque em implementar a lógica de cada operação, otimizando o uso do tempo. No
+  caso de consumidores, eles poupam o trabalho de ter que implementar um código
+  de integração com a API, que pode conter erros e ser difícil de manter,
+  principalmente com relação a mudanças e adições na API.
 \item
-  O código gerado abstraí toda a camada de comunicação e rede, tanto do servidor
+  O código gerado abstrai toda a camada de comunicação e rede, tanto do servidor
   quanto do cliente, facilitando o entendimento do código que o programador precisa
   implementar.
 \end{enumerate}
@@ -85,9 +84,9 @@ Da mesma forma que IDLs e geradores tentam facilitar o desenvolvimento da
 \textit{interface} de uma API, ORMs tentam facilitar a integração do código da
 API com o banco de dados usado (seja ele SQL ou NoSQL). Elas são bibliotecas que
 abstraem a execução de operações no banco de dados em uma interface amigável para
-a linguagem de programação usada. Como são bibliotecas, uma ORM é específica para
-a linguagem de programação em que ela foi implementada, e normalmente também é
-específica para um banco ou conjunto de bancos.
+a linguagem de programação usada. Por esse motivo, ORM é específica para a linguagem
+de programação em que ela foi implementada, e normalmente também é específica para
+um banco ou conjunto de bancos.
 
 ORMs normalmente funcionam via anotações e interfaces que o programador precisa
 adicionar ou implementar no código-fonte dos modelos. Essas anotações servem para,
@@ -137,7 +136,7 @@ class Employee(Base):
 ORMs são populares pois simplificam o trabalho do desenvolvedor ao automatizar muitas
 operações que são comumente realizadas no banco, e por prover uma DSL caso seja
 necessário fazer algo mais complexo. Dependendo da linguagem, essas funcionalidades
-podem ser validades em tempo de compilação, previnindo defeitos.
+podem ser validadas em tempo de compilação, previnindo defeitos.
 
 \section{Problema}
 
@@ -162,21 +161,21 @@ custo operacional. Alguns exemplos de modificações possíveis:
   Integração com ORMs ou outras bibliotecas.
 \end{itemize}
 
-Devido a esses problemas, muitas organizações deixam de usar essas ferramentas, os
+Devido a esses problemas, muitas organizações deixam de usar essas ferramentas e os
 programadores precisam implementar manualmente códigos que poderiam ser gerados.
-Isso aumenta a chance de erros ocorrerem durante a implementação, e ela divergir da
-especificação, quanto também diminui a eficiência do time, pois há mais tarefas a
+Isso aumenta a chance de erros ocorrerem durante a implementação, e o resultado divergir
+da especificação. Além disso, diminui a eficiência do time, pois há mais tarefas a
 serem realizadas.
 
 Avaliando as tarefas realizadas pelo time de engenharia de uma organização durante o
 ano de 2020, foi possível identificar que pelos menos 30\% das tarefas realizadas
-eram realicionadas a implementação de modelos, integração com ORMs e com a camada
-de comunicação da API. Além disso, desses 30\%, ocorreram diversas vezes tarefas
+eram relacionadas a implementação de modelos, integração com ORMs e com a camada
+de comunicação da API. Além disso, dentro desses 30\%, ocorreram diversas vezes tarefas
 extras relacionadas com ajustes da implementação para que essa seguisse a especificação.
 
 Na tentativa de solucionar esse problema, esse trabalho propõe um novo modelo de
 gerador de APIs, que pode ser extendido para suportar qualquer linguagem ou funcionalidade
-nova sem a necessidade de modificar o código-fonte do mesmo.
+nova sem a necessidade de modificar o código-fonte.
 
 Esse trabalho é estruturado como se segue. \cref{cap:past-works} faz uma análise
 de trabalhos anteriores. \cref{cap:proposal} apresenta, de forma detalhada, o que
