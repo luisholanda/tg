@@ -1,7 +1,7 @@
 \section{Contexto}
 
-Desenvolvimento de aplicações Web apresenta um variado nível de dificuldade e
-complexidade: podem variar desde um simples serviço com poucas operações até
+O desenvolvimento de aplicações Web apresenta um variado nível de dificuldade e
+complexidade: pode variar desde um simples serviço com poucas operações até
 um complexo sistema com dezenas (ou centenas) de serviços interligados de maneira
 arbitrária com centenas ou milhares de operações.
 
@@ -14,23 +14,23 @@ mapping} (ORMs) são exemplos de ferramentas que caem nessa categoria.
 APIs são normalmente especificadas em \textit{Interface Definition Languages}
 (IDLs). Essas linguagens possuem construções que facilitam o desenvolvimento de uma
 especificação, em relação a operações, entradas, saídas e erros. Qual é usada
-depende do tipo de API está sendo construída, alguns exemplos são:
+depende do tipo de API que está sendo construída, alguns exemplos são:
 
 \begin{itemize}
 \item
   \textit{Web Service Description Language} \cite{wsdl:spec}: usada para
     definir APIs que usam o protocolo SOAP. É uma linguagem baseada em XML.
-    Um exemplo de um arquivo WSDL é apresentado em \cref{anex:wsdl-example}.
+    Um exemplo de um arquivo WSDL é apresentado no \cref{anex:wsdl-example}.
 \item
   \textit{OpenAPI} \cite{openapi:spec}: comumente usada para definir APIs que usam
     o protocolo HTTP \cite{rfc2616}, informalmente chamadas de \textit{"Restful APIs"}
     em referência ao conceito de REST definido em \cite{10.5555/932295}. É uma linguagem
-    baseada em YAML. Um exemplo de um arquivo OpenAPI é apresentado em \cref{anex:openapi-example}.
+    baseada em YAML. Um exemplo de um arquivo OpenAPI é apresentado no \cref{anex:openapi-example}.
 \item
   \textit{Protocol Buffers} \cite{googl:protobuf}: usada para definir APIs que usam
     o protocolo gRPC \cite{googl:grpc}. O nome se refere tanto à IDL usada para a
     especificação quanto para ao formato binário usado para transmitir as mensagens.
-    Um exemplo de um arquivo em Protocol Buffers é apresentado em \cref{anex:protobuf-example}.
+    Um exemplo de um arquivo em Protocol Buffers é apresentado no \cref{anex:protobuf-example}.
 \end{itemize}
 
 Existem diversas vantagens em usar uma IDL, entre elas:
@@ -41,7 +41,7 @@ Existem diversas vantagens em usar uma IDL, entre elas:
   precisam interagir via API é mais simples, já que todos os detalhes de interface
   estão especificados em um formato padrão.
 \item
-  Pro esse motivo, é muito mais simples construir ferramentas de análise sobre a
+  Por esse motivo, é muito mais simples construir ferramentas de análise sobre a
   especificação, como geradores de código, validadores, ferramentas de teste, etc.
 \end{enumerate}
 
@@ -50,18 +50,18 @@ Existem diversas vantagens em usar uma IDL, entre elas:
 Geradores de APIs são ferramentas que, via uma especificação de uma API, conseguem
 produzir código-fonte em uma linguagem de programação tanto para realizar requisições
 a essa API, quanto para gerar uma base para a implementação da API em si.
-O código gerado em ambos os casos contém tanto métodos para as operações suportadas
-pela API quanto as estruturas de dados necessárias para interfacear com as mensagens
+O código gerado em ambos os casos contém, tanto métodos para as operações suportadas
+pela API, quanto as estruturas de dados necessárias para interfacear com as mensagens
 a serem transmitidas.
 
 Existem diversas vantagens em usar um gerador de API, entre elas:
 
 \begin{enumerate}
 \item
-  Como toda a parte dos modelos são geradas, servidor ou cliente, há uma significativa
-  redução no volume de linhas de código-fonte do sistema, reduzindo a possibilidade
-  de defeitos \cite{5010260} e facilitando o entendimento do projeto por novos
-  desenvolvedores.
+  Como toda a parte dos modelos são geradas, tanto pelo servidor, como pelo cliente,
+  há uma significativa redução no volume de linhas de código-fonte do sistema, reduzindo
+  a possibilidade de defeitos \cite{5010260} e facilitando o entendimento do projeto por
+  novos desenvolvedores.
 \item
   Como o código é gerado a partir da especificação, sabemos que a implementação
   vai estar de acordo com a interface especificada, permitindo que o programador
