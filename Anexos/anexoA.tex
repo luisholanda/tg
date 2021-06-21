@@ -15,37 +15,81 @@
     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
                xmlns="http://www.tmsws.com/wsdl20sample"
                targetNamespace="http://www.example.com/wsdl20sample">
+     <xs:element name="Error" type="Error"/>
+     <xs:element name="Pet" type="Pet"/>
+     <xs:element name="Pets" type="Pets"/>
+     <xs:element name="NewPet" type="NewPet"/>
 
-     <xs:element name="request"> ... </xs:element>
-     <xs:element name="response"> ... </xs:element>
+     <xs:element name="ListPetsRequest" type="ListPetsRequest"/>
+     <xs:element name="ShowPetByIdRequest" type="ShowPetByIdRequest"/>
+
+     <xs:complexType name="Error">
+      <xs:attribute name="code" type="xs:int"/>
+      <xs:attribute name="message" type="xs:string"/>
+     </xs:complexType>
+     <xs:complexType name="Pet">
+      <xs:attribute name="id" type="xs:int"/>
+      <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="tag" type="xs:string" nillable="true"/>
+     </xs:complexType>
+     <xs:complexType name="NewPet">
+      <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="tag" type="xs:string" nillable="true"/>
+     </xs:complexType>
+     <xs:complexType name="Pets">
+      <xs:sequence>
+        <xs:element minOccurs="0" name="pets" type="tns:Pet"/>
+      </xs:sequence>
+     </xs:complexType>
+
+     <xs:complexType name="ListPetsRequest">
+      <xs:attribute name="limit" type="xs:int" nillable="true"/>
+      <xs:attribute name="cursor" type="xs:string" nillable="true"/>
+     </xs:complexType>
+
+     <xs:complexType name="ShowPetByIdRequest">
+      <xs:attribute name="id" type="xs:int"/>
+     </xs:complexType>
     </xs:schema>
   </types>
 
 <!-- Abstract interfaces -->
-  <interface name="Interface1">
-    <fault name="Error1" element="tns:response"/>
-    <operation name="Get" pattern="http://www.w3.org/ns/wsdl/in-out">
-      <input messageLabel="In" element="tns:request"/>
-      <output messageLabel="Out" element="tns:response"/>
+  <interface name="PetStoreInterface">
+    <fault name="Error1" element="tns:Error"/>
+    <operation name="ListPets" pattern="http://www.w3.org/ns/wsdl/in-out">
+      <input messageLabel="In" element="tns:ListPetsRequest"/>
+      <output messageLabel="Out" element="tns:Pets"/>
+    </operation>
+    <operation name="CreatePet" pattern="http://www.w3.org/ns/wsdl/in-out">
+      <input messageLabel="In" element="tns:NewPet"/>
+      <output messageLabel="Out" element="tns:Pet"/>
+    </operation>
+    <operation name="ShowPetById" pattern="http://www.w3.org/ns/wsdl/in-out">
+      <input messageLabel="In" element="tns:ShowPetByIdRequest"/>
+      <output messageLabel="Out" element="tns:Pet"/>
     </operation>
   </interface>
 
 <!-- Concrete Binding Over HTTP -->
-  <binding name="HttpBinding" interface="tns:Interface1"
+  <binding name="HttpBinding" interface="tns:PetStoreInterface"
            type="http://www.w3.org/ns/wsdl/http">
-    <operation ref="tns:Get" whttp:method="GET"/>
+    <operation ref="tns:ListPets" whttp:method="GET"/>
+    <operation ref="tns:CreatePet" whttp:method="POST"/>
+    <operation ref="tns:ShowPetById" whttp:method="GET"/>
   </binding>
 
 <!-- Concrete Binding with SOAP-->
-  <binding name="SoapBinding" interface="tns:Interface1"
+  <binding name="SoapBinding" interface="tns:PetStoreInterface"
            type="http://www.w3.org/ns/wsdl/soap"
            wsoap:protocol="http://www.w3.org/2003/05/soap/bindings/HTTP/"
            wsoap:mepDefault="http://www.w3.org/2003/05/soap/mep/request-response">
     <operation ref="tns:Get" />
+    <operation ref="tns:CreatePet" />
+    <operation ref="tns:ShowPetById" />
   </binding>
 
 <!-- Web Service offering endpoints for both bindings-->
-  <service name="Service1" interface="tns:Interface1">
+  <service name="PetStoreService" interface="tns:PetStoreInterface">
     <endpoint name="HttpEndpoint"
               binding="tns:HttpBinding"
               address="http://www.example.com/rest/"/>
