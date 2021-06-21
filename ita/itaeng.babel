@@ -46,14 +46,14 @@
 \gdef\itatitletextbabel{\nh{\itaworklevel\ presented to the Instituto Tecnol\'{o}gico de Aeron\'{a}utica, in partial fulfillment of the requirements for the degree of \itaauthortitle\ in the Graduate Program of \itaworkcourse, Field of \itaworkarea}\vspace{12pt}.}
 
 \gdef\itathesisapprovedmembersbabel{\itaworklevel\ approved in its final version by signatories below:}
-                                   
+
 \gdef\itacountrybabel{Brazil}
 
 %--------------------------------------------------------
 %Trabalho de Graduação (TG)
 %--------------------------------------------------------
 \gdef\itatitletexttgbabel{\nh{Work presented to the Instituto Tecnol\'{o}gico de Aeron\'{a}utica, in partial fulfillment of the requirements for the conclusion of the course in \itaworkcourse.}\vspace{12pt}.}
-	  
+
 \gdef\itathesisapprovedmemberstgbabel{This publication was accepted like Final Work of Undergraduation Study}
 																			% outra possibilidade: Final Work approved in its final version by signatories below:
 \gdef\itacountrytgbabel{Brazil}
@@ -107,10 +107,10 @@
 \gdef\itacoadvisortitlebabel{Prof.~Dr.}                            %{Prof.~Dr.}
 \gdef\itacoadvisorwordbabel{Co-advisor}                            %{Coorientador}
 
-\gdef\itabossnamebabel{Dean for Graduate Education and Research's Name}   
+\gdef\itabossnamebabel{Dean for Graduate Education and Research's Name}
                                                                    %{Nome do Pro-Reitor de Pos-Graduacao}
 \gdef\itabosstitle{Prof.~Dr.}                                      %{Prof.~Dr.}
-\gdef\itabosswordbabel{Pro-Rector of Graduate Courses}   
+\gdef\itabosswordbabel{Pro-Rector of Graduate Courses}
                                                                    %{Pro-Reitor de Pos-Graduacao}
 
 \gdef\itabosscoursenamebabel{Name of the Course Coordinator of \itaworkcourse} %{Nome do coordenador do respectivo curso de graduação}
@@ -123,7 +123,7 @@
 \gdef\itaauthortitlebabel{(Title)}                                 %{(Título)}
 \gdef\courseofbabel{Course of}																		 %{Course of}
 
-\gdef\cdunumberbabel{CDU}																					 %Número de Registro para organização nas prateleiras da biblioteca..} 
+\gdef\cdunumberbabel{CDU}																					 %Número de Registro para organização nas prateleiras da biblioteca..}
 
 \gdef\authorgendermfbabel{mf}                              					 % masc ou fem
 \gdef\advisorgendermfbabel{mf}                            					 % masc ou fem
@@ -141,22 +141,22 @@
 \gdef\itacipbibbabel{Documentation and Information Division}
 
 \gdef\itacipdata1babel {\itaworklevel\ of \itaauthortitle\ -- Course of \itaworkcourse. Area of \itaworkarea\ -- Instituto Tecnol\'{o}gico de Aeron\'{a}utica,
-                        \@publyear. Advisor: \itaadvisortitle\ \itaadvisorname. 
+                        \@publyear. Advisor: \itaadvisortitle\ \itaadvisorname.
 			\@ifundefined{@coadvisor}{}{Co-advisor: \@itacoadvisortitle\ \@itacoadvisorname.}\par
 			\vspace{\baselineskip}
-			\@cipkw\ I. Instituto Tecnol\'{o}gico de Aeron\'{a}utica. II.~Title.\par}
+			\@cipkw\ I. Instituto Tecnol\'{o}gico de Aeron\'{a}utica. II.~\@title.\par}
 
 \gdef\itaciptgdata1babel {Final paper (Undergraduation study) -- Course of \itaworkcourse -- Instituto Tecnol\'{o}gico de Aeron\'{a}utica,
 	\@publyear. Advisor: \itaadvisortitle\ \itaadvisorname. \@ifundefined{@coadvisor}{}{Co-advisor:
 	\@itacoadvisortitle\ \@itacoadvisorname.}\par
 	\vspace{\baselineskip}
-	\@cipkw\ I. Instituto Tecnol\'{o}gico de Aeron\'{a}utica. II.~Title.\par}
+	\@cipkw\ I. Instituto Tecnol\'{o}gico de Aeron\'{a}utica. II.~\@title.\par}
 
 \gdef\itarefbibnamecipbabel{BIBLIOGRAPHIC REFERENCE}
 
 \gdef\itacip2babel {\itaworklevel\ of \itaauthortitle\ -- Instituto Tecnol\'{o}gico de Aeron\'{a}utica, S\~{a}o Jos\'{e} dos Campos.}
 
-\gdef\itaciptg2babel {Final paper (Undergraduation study) -- Instituto Tecnol\'{o}gico de Aeron\'{a}utica, 
+\gdef\itaciptg2babel {Final paper (Undergraduation study) -- Instituto Tecnol\'{o}gico de Aeron\'{a}utica,
         S\~{a}o Jos\'{e} dos Campos.}
 
 \gdef\itacedirnamebabel{CESSION OF RIGHTS}

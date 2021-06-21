@@ -33,8 +33,8 @@
 \gdef\itaworklevelqualibabel{Exame de Qualifica{\c{c}}{\~a}o}
 \gdef\itaauthortitlequalibabel{Doutor}
 \gdef\itaauthortitlequalifembabel{Doutora}
-\gdef\itaqualifictextbabel{{\nh{\itaworklevel\ submetido {\`a} avalia{\c{c}}{\~a}o, 
-          como requisito parcial para a obten{\c{c}}{\~a}o do t{\'\i}tulo de \itaauthortitle\ em 
+\gdef\itaqualifictextbabel{{\nh{\itaworklevel\ submetido {\`a} avalia{\c{c}}{\~a}o,
+          como requisito parcial para a obten{\c{c}}{\~a}o do t{\'\i}tulo de \itaauthortitle\ em
 	  Ci{\^e}ncias no Programa de P{\'o}s-Gradua{\c{c}}{\~a}o em \itaworkcourse, {\'A}rea de \itaworkarea.}}}
 
 \gdef\itanametitlequalibabel{ITA -- \textsc{Instituto Tecnol{\'o}gico de Aeron{\'a}utica}}
@@ -44,21 +44,21 @@
 %--------------------------------------------------------
 %Tese ou Dissertacao
 %--------------------------------------------------------
-\gdef\itatitletextbabel{\nh{\itaworklevel\ apresentada {\`a} Pr{\'o}-Reitoria de 
-          P{\'o}s-Gradua{\c{c}}{\~a}o do Instituto Tecnol{\'o}gico de Aeron{\'a}utica, como parte dos requisitos para obten{\c{c}}{\~a}o do 
+\gdef\itatitletextbabel{\nh{\itaworklevel\ apresentada {\`a} Pr{\'o}-Reitoria de
+          P{\'o}s-Gradua{\c{c}}{\~a}o do Instituto Tecnol{\'o}gico de Aeron{\'a}utica, como parte dos requisitos para obten{\c{c}}{\~a}o do
 	  t{\'\i}tulo de \itaauthortitle\ em Ci{\^e}ncias no Programa de P{\'o}s-Gradua{\c{c}}{\~a}o em \itaworkcourse, {\'A}rea de \itaworkarea}.}
 
 \gdef\itathesisapprovedmembersbabel{\itaworklevel\ aprovada em sua vers\~{a}o final pelos abaixo assinados:}
-                                   
+
 \gdef\itacountrybabel{Brasil}
 
 %--------------------------------------------------------
 %Trabalho de Graduação (TG)
 %--------------------------------------------------------
-\gdef\itatitletexttgbabel{\nh{Trabalho apresentado {\`a} Pr{\'o}-Reitoria de 
-          Gradua{\c{c}}{\~a}o do Instituto Tecnol{\'o}gico de Aeron{\'a}utica, como parte dos requisitos para conclus{\~a}o do 
+\gdef\itatitletexttgbabel{\nh{Trabalho apresentado {\`a} Pr{\'o}-Reitoria de
+          Gradua{\c{c}}{\~a}o do Instituto Tecnol{\'o}gico de Aeron{\'a}utica, como parte dos requisitos para conclus{\~a}o do
 	  curso de \itaworkcourse}.}
-	  
+
 \gdef\itathesisapprovedmemberstgbabel{Essa publica{\c{c}}{\~a}o foi aceita como Relat{\'o}rio Final de Trabalho de Gradua{\c{c}}{\~a}o}
 																			% outra possibilidade: Trabalho aprovado em sua vers\~{a}o final pelos abaixo assinados:
 \gdef\itacountrytgbabel{Brasil}
@@ -105,7 +105,7 @@
 \gdef\@authorwordbabel{Autor}																			%{Autor}
 \gdef\itaauthoraddressbabel{Rua Tal, xxx}                         %{Rua Tal, xxx}
 
-\gdef\itaadvisornamebabel{Nome d\ifthenelse{\equal{\advisorgendermf}{masc}}{o}{a} Orientador\ifthenelse{\equal{\advisorgendermf}{masc}}{}{a}}                     
+\gdef\itaadvisornamebabel{Nome d\ifthenelse{\equal{\advisorgendermf}{masc}}{o}{a} Orientador\ifthenelse{\equal{\advisorgendermf}{masc}}{}{a}}
 																																	%{Nome do Orientador}
 \gdef\itaadvisortitlebabel{Prof\ifthenelse{\equal{\advisorgendermf}{masc}}{}{$^\textnormal{a}$}.~Dr\ifthenelse{\equal{\advisorgendermf}{masc}}{}{a}.}
 																																	%{Prof.~Dr.}
@@ -118,16 +118,16 @@
 \gdef\itacoadvisorwordbabel{Coorientador\ifthenelse{\equal{\coadvisorgendermf}{masc}}{}{a}}
 																																	%{Coorientador}
 
-\gdef\itabossnamebabel{Nome d\ifthenelse{\equal{\bossgendermf}{masc}}{o}{a} Pr{\'o}-Reitor\ifthenelse{\equal{\bossgendermf}{masc}}{}{a} de P{\'o}s-Gradua{\c{c}}{\~a}o} 
+\gdef\itabossnamebabel{Nome d\ifthenelse{\equal{\bossgendermf}{masc}}{o}{a} Pr{\'o}-Reitor\ifthenelse{\equal{\bossgendermf}{masc}}{}{a} de P{\'o}s-Gradua{\c{c}}{\~a}o}
                                                                   %{Nome do Pro-Reitor de Pos-Graduacao}
 \gdef\itabosstitle{Prof\ifthenelse{\equal{\bossgendermf}{masc}}{}{$^\textnormal{a}$}.~Dr\ifthenelse{\equal{\bossgendermf}{masc}}{}{a}.}         														                             %{Prof.~Dr.}
 \gdef\itabosswordbabel{Pr{\'o}-Reitor\ifthenelse{\equal{\bossgendermf}{masc}}{}{a} de P{\'o}s-Gradua{\c{c}}{\~a}o}
                                                                   %{Pro-Reitor de Pos-Graduacao}
 
-\gdef\itabosscoursenamebabel{Nome d\ifthenelse{\equal{\bosscoursegendermf}{masc}}{o}{a} Coordenador do Curso de \itaworkcourse} 
+\gdef\itabosscoursenamebabel{Nome d\ifthenelse{\equal{\bosscoursegendermf}{masc}}{o}{a} Coordenador do Curso de \itaworkcourse}
 																																	%{Nome do coordenador do respectivo curso de graduação}
 \gdef\itabosscoursetitle{Prof\ifthenelse{\equal{\bossgendermf}{masc}}{}{$^\textnormal{a}$}.~Dr\ifthenelse{\equal{\bossgendermf}{masc}}{}{a}.}												                                           %{Prof.~Dr.}
-\gdef\itabosscoursewordbabel{Coordenador\ifthenelse{\equal{\bosscoursegendermf}{masc}}{}{a} do Curso de \itaworkcourse}         
+\gdef\itabosscoursewordbabel{Coordenador\ifthenelse{\equal{\bosscoursegendermf}{masc}}{}{a} do Curso de \itaworkcourse}
 																																						 %{Coordenador do respectivo curso de graduação}
 
 \gdef\itaworklevelbabel{(Documento)}                               %{(Documento)}
@@ -136,7 +136,7 @@
 \gdef\itaauthortitlebabel{(Titulo)}                                %{(Titulo)}
 \gdef\courseofbabel{Curso de}				  														 %{Curso de}
 
-\gdef\cdunumberbabel{CDU}																					 %Número de Registro para organização nas prateleiras da biblioteca..} 
+\gdef\cdunumberbabel{CDU}																					 %Número de Registro para organização nas prateleiras da biblioteca..}
 
 \gdef\authorgendermfbabel{mf}                              					 % masc ou fem
 \gdef\advisorgendermfbabel{mf}                            					 % masc ou fem
@@ -154,25 +154,25 @@
 \gdef\itaciptitlebabel{Dados Internacionais de Cataloga{\c{c}}{\~a}o-na-Publica{\c{c}}{\~a}o (CIP)}
 \gdef\itacipbibbabel{Divis{\~a}o de Informa{\c{c}}{\~a}o e Documenta{\c{c}}{\~a}o}
 
-\gdef\itacipdata1babel {\itaworklevel\ de \itaoptioncourse\ -- Curso de \itaworkcourse. 
+\gdef\itacipdata1babel {\itaworklevel\ de \itaoptioncourse\ -- Curso de \itaworkcourse.
 \'{A}rea de \itaworkarea\ -- Instituto Tecnol\'{o}gico de Aeron\'{a}utica,
 	\@publyear. Orientador\ifthenelse{\equal{\advisorgendermf}{masc}}{}{a}: \itaadvisortitle\ \itaadvisorname. \@ifundefined{@coadvisor}{}{Coorientador\ifthenelse{\equal{\coadvisorgendermf}{masc}}{}{a}:
 	\@itacoadvisortitle\ \@itacoadvisorname.}\par
 	\vspace{\baselineskip}
-	\@cipkw\ I. Instituto Tecnol\'{o}gico de Aeron\'{a}utica. II.~T\'{\i}tulo.\par}
-	
+	\@cipkw\ I. Instituto Tecnol\'{o}gico de Aeron\'{a}utica. II.~\@title.\par}
+
 \gdef\itaciptgdata1babel {\itaworklevel\ de \itaoptioncourse\ -- Curso de \itaworkcourse -- Instituto Tecnol\'{o}gico de Aeron\'{a}utica,
 	\@publyear. Orientador\ifthenelse{\equal{\advisorgendermf}{masc}}{}{a}: \itaadvisortitle\ \itaadvisorname. \@ifundefined{@coadvisor}{}{Coorientador\ifthenelse{\equal{\coadvisorgendermf}{masc}}{}{a}:
 	\@itacoadvisortitle\ \@itacoadvisorname.}\par
 	\vspace{\baselineskip}
-	\@cipkw\ I. Instituto Tecnol\'{o}gico de Aeron\'{a}utica. II.~T\'{\i}tulo.\par}
+	\@cipkw\ I. Instituto Tecnol\'{o}gico de Aeron\'{a}utica. II.~\@title.\par}
 
 \gdef\itarefbibnamecipbabel{REFER\^{E}NCIA BIBLIOGR\'{A}FICA}
 
-\gdef\itacip2babel {\itaworklevel\ de \itaoptioncourse\ -- Instituto Tecnol\'{o}gico de Aeron\'{a}utica, 
+\gdef\itacip2babel {\itaworklevel\ de \itaoptioncourse\ -- Instituto Tecnol\'{o}gico de Aeron\'{a}utica,
         S\~{a}o Jos\'{e} dos Campos.}
-				
-\gdef\itaciptg2babel {Trabalho de Conclus{\~a}o de Curso (Gradua{\c{c}}{\~a}o) -- Instituto Tecnol\'{o}gico de Aeron\'{a}utica, 
+
+\gdef\itaciptg2babel {Trabalho de Conclus{\~a}o de Curso (Gradua{\c{c}}{\~a}o) -- Instituto Tecnol\'{o}gico de Aeron\'{a}utica,
         S\~{a}o Jos\'{e} dos Campos.}
 
 \gdef\itacedirnamebabel{CESS\~{A}O DE DIREITOS}
@@ -180,12 +180,12 @@
 \gdef\itacipworktitlebabel{TITULO DO TRABALHO:}
 \gdef\itacipworktype{TIPO DO TRABALHO/ANO:}
 
-\gdef\itacesdirtextbabel{{\'E} concedida ao Instituto Tecnol{\'o}gico de Aeron{\'a}utica permiss{\~a}o 
-        para reproduzir c{\'o}pias desta \ifthenelse{\equal{\itaoptionlevel}{quali}}{exame de qualifica{\c{c}}{\~a}o}{\ifthenelse{\equal{\itaoptionlevel}{msc}}{disserta{\c{c}}{\~a}o}{tese}} e para emprestar ou vender c{\'o}pias somente para prop{\'o}sitos 
-	acad{\^e}micos e cient{\'\i}ficos. \ifthenelse{\equal{\authorgendermf}{masc}}{O autor}{A autora} reserva outros direitos de  publica{\c{c}}{\~a}o e nenhuma 
+\gdef\itacesdirtextbabel{{\'E} concedida ao Instituto Tecnol{\'o}gico de Aeron{\'a}utica permiss{\~a}o
+        para reproduzir c{\'o}pias desta \ifthenelse{\equal{\itaoptionlevel}{quali}}{exame de qualifica{\c{c}}{\~a}o}{\ifthenelse{\equal{\itaoptionlevel}{msc}}{disserta{\c{c}}{\~a}o}{tese}} e para emprestar ou vender c{\'o}pias somente para prop{\'o}sitos
+	acad{\^e}micos e cient{\'\i}ficos. \ifthenelse{\equal{\authorgendermf}{masc}}{O autor}{A autora} reserva outros direitos de  publica{\c{c}}{\~a}o e nenhuma
 	parte desta \ifthenelse{\equal{\itaoptionlevel}{quali}}{exame de qualifica{\c{c}}{\~a}o}{\ifthenelse{\equal{\itaoptionlevel}{msc}}{disserta{\c{c}}{\~a}o}{tese}} pode ser reproduzida sem a autoriza{\c{c}}{\~a}o \ifthenelse{\equal{\authorgendermf}{masc}}{do autor}{da autora}.}
 
-\gdef\itacesdirtgtextbabel{{\'E} concedida ao Instituto Tecnol{\'o}gico de Aeron{\'a}utica permiss{\~a}o 
-        para reproduzir c{\'o}pias deste trabalho de gradua{\c{c}}{\~a}o e para emprestar ou vender c{\'o}pias somente para prop{\'o}sitos 
-	acad{\^e}micos e cient{\'\i}ficos. \ifthenelse{\equal{\authorgendermf}{masc}}{O autor}{A autora} reserva outros direitos de  publica{\c{c}}{\~a}o e nenhuma 
+\gdef\itacesdirtgtextbabel{{\'E} concedida ao Instituto Tecnol{\'o}gico de Aeron{\'a}utica permiss{\~a}o
+        para reproduzir c{\'o}pias deste trabalho de gradua{\c{c}}{\~a}o e para emprestar ou vender c{\'o}pias somente para prop{\'o}sitos
+	acad{\^e}micos e cient{\'\i}ficos. \ifthenelse{\equal{\authorgendermf}{masc}}{O autor}{A autora} reserva outros direitos de  publica{\c{c}}{\~a}o e nenhuma
 	parte deste trabalho de gradua{\c{c}}{\~a}o pode ser reproduzida sem a autoriza{\c{c}}{\~a}o \ifthenelse{\equal{\authorgendermf}{masc}}{do autor}{da autora}.}
