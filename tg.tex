@@ -63,9 +63,11 @@
 \usepackage{prettyref}
 
 \renewcommand\listingscaption{Código}
+\newcommand{\Baker}{\textit{Baker}}
 
 \newrefformat{anex}{Anexo~\ref{#1}}
 \newrefformat{cap}{Capítulo~\ref{#1}}
+\newrefformat{fig}{Figura~\ref{#1}}
 \newrefformat{lst}{Código~\ref{#1}}
 \newrefformat{tbl}{Tabela~\ref{#1}}
 
@@ -115,13 +117,13 @@
 
 %Coordenador do curso no caso de TG
 \bosscoursegender{masc}
-\bosscourse{Prof.~Dr.}{Johnny Marques}
+\bosscourse{Prof.~Dr.}{Marcos Ricardo O. de A. Máximo}
 
 % Palavras-Chaves informadas pela Biblioteca -> utilizada na CIP
 %\kwcip{Cupim}
 
 % Data da defesa (mês em maiúsculo, se trabalho em inglês, e minúsculo se trabalho em português)
-\date{XX}{XXX}{2021}
+\date{16}{novembro}{2021}
 
 % Número CDU - (somente para TG)
 \cdu{XXX.XX}
@@ -136,14 +138,20 @@
 \mainmatter
 % Os capitulos comecam aqui
 
-\chapter{Introdução}
+\chapter{Introdução}\label{cap:introduction}
 \input{Capitulos/cap1}
 
 \chapter{Trabalhos Anteriores}\label{cap:past-works}
 \input{Capitulos/cap2}
 
-\chapter{Proposta}\label{cap:proposal}
+\chapter{Projeto}\label{cap:project}
 \input{Capitulos/cap3}
+\input{Capitulos/cap3.2}
+
+\chapter{Validação}\label{cap:validation}
+\input{Capitulos/cap4}
+
+\chapter{Conclusão}\label{cap:conclusion}
 
 
 % REFERENCIAS BIBLIOGRAFICAS
@@ -160,9 +168,15 @@
 \chapter{Exemplo em Protocol Buffers}\label{anex:protobuf-example}
 \input{Anexos/anexoC.tex}
 
+\chapter{Especificação API Blog}\label{anex:blog-spec}
+\input{Anexos/anexoD.tex}
+
+\chapter{Código gerado para a API Blog}\label{anex:blog-codegen}
+\input{Anexos/anexoE.tex}
+
 % Glossario
-%\itaglossary
-%\printglossary
+\itaglossary
+\printglossary
 
 % Folha de Registro do Documento
 % Valores dos campos do formulario
@@ -170,8 +184,8 @@
 \FRDitadocnro{DCTA/ITA/DM-018/2015} %(o número de registro você solicita a biblioteca)
 \FRDitaorgaointerno{Instituto Tecnológico de Aeronáutica -- ITA}
 %Exemplo no caso de pós-graduação: Instituto Tecnol{\'o}gico de Aeron{\'a}utica -- ITA
-\FRDitapalavrasautor{Cupim; Cimento; Estruturas}
-\FRDitapalavrasresult{Cupim; Dilema; Construção}
+%\FRDitapalavrasautor{Cupim; Cimento; Estruturas}
+%\FRDitapalavrasresult{Cupim; Dilema; Construção}
 %Exemplo no caso de graduação (TG):
 \FRDitapalavraapresentacao{Trabalho de Graduação, ITA, São José dos Campos, 2015. \NumPenultimaPagina\ páginas.}
 %Exemplo no caso de pós-graduação (msc, dsc):
@@ -181,7 +195,7 @@
 %  Segundo parametro: Ostensivo, Reservado, Confidencial ou Secreto -- O/R/C/S
 \FRDitaOpcoes{N}{O}
 % Cria o formulario
-%\itaFRD
+\itaFRD
 
 
 \end{document}

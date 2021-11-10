@@ -1,0 +1,203 @@
+\section{Experimento}
+
+Para experimentarmos com a plataforma, identificar pontos de melhoria durante a construção e
+servir como base para o experimento de validação, construimos uma série de \textit{layers} e
+um \textit{codegen} para a linguagem de programação Rust \cite{rust:site}. Os geradores foram
+escolhidos com o objetivo de permitir usuários construirem serviços Web utilizando a plataforma.
+
+\subsection{\textit{Layers} Definidas}
+
+Mantendo a ideia de componentização dos geradores, cada \textit{layer} é responsável por apenas
+parte do código gerado: cada uma gera a integração com uma biblioteca específica. Como a troca
+de uma \textit{layer} por outra é simples, é possível tomar decisões por padrão sem limitar o
+usuário.
+
+\subsubsection{\texttt{rust-types}}
+
+A primeira \textit{layer} desenvolvida, e a primeira que deve ser passada para o programa, é
+o gerador responsável por traduzir as mensagems definidas nos arquivos fonte em tipos da linguagem
+objeto. Esse deve ser o primeiro programa a ser passado devido as regras de combinação de IR: o
+primeiro resultado é aquele que tem prioridade na definição de campos dos tipos.
+
+Um exemplo simples de código gerado é apresentado pelas listagens \ref{lst-rust-types-proto-src}
+e \ref{lst-rust-types-rust-out}, onde uma \textit{struct} em Rust é gerada a partir de uma
+\textit{message} em Protocol Buffers. Um ponto a ser comentado é que, apesar de estarmos construindo
+um gerador de código, isso não significa que não possamos utilizar mecânicas de geração da própria
+linguagem objeto. No nosso exemplo, o uso do atributo \texttt{derive} permite que mais código seja
+gerado pelo compilador da linguagem, simplificando o código gerador e facilitando o entendimento
+do mesmo pelos desenvolvedores.
+
+\begin{listing}
+\begin{minted}{protobuf}
+// Response of the [`ListPets`] RPC method.
+message ListPetsResponse {
+  // A paged array of pets.
+  repeated Pet pets = 1;
+  // A link to the next page of responses.
+  optional string cursor = 2;
+}
+\end{minted}
+\caption{Exemplo de entrada para a \textit{layer} \texttt{rust-types}}
+\label{lst-rust-types-proto-src}
+\end{listing}
+
+\begin{listing}
+\begin{minted}{rust}
+/// Response of the [`ListPets`] RPC method.
+#[derive(Clone, Debug, Default, PartialEq)]
+struct ListPetsResponse {
+    /// A paged array of pets
+    pub pets: Vec<Pet>,
+    /// A link to the next page of responses
+    pub cursor: Option<String>
+}
+\end{minted}
+\caption{Exemplo de saida da \textit{layer} \texttt{rust-types}}
+\label{lst-rust-types-rust-out}
+\end{listing}
+
+Um exemplo mais complexo é apresentado nas listagens \ref{lst-rust-types-cplx-proto-src} e
+\ref{lst-rust-types-cplx-rust-out}. Nesse exemplo, mostramos o código gerado para um \texttt{enum}
+e uma mensagem com campo \texttt{oneof}. No caso do \texttt{oneof}, é necessário gerar um
+\texttt{enum} adicional que garante que apenas um dos campos do \texttt{oneof} está presente,
+ou que nenhum esteja (membro \texttt{NotSet}).
+
+\begin{listing}
+\begin{minted}{protobuf}
+// Possible formats of content in a Post.
+enum ContentFormat {
+  // Conventional default.
+  UNKNOWN = 0;
+  // The post was written in plain text.
+  PLAIN_TEXT = 1;
+  // The post was written in markdown.
+  MARKDOWN = 2;
+}
+
+// A user in the service.
+message User {
+  // ID of the user.
+  int64 id = 1;
+  // Name of the user.
+  string name = 2;
+
+  // Idenfier of the user.
+  oneof identifier {
+    // The user used an email to identify himself.
+    string email = 3;
+    // The user used a username to identify himself.
+    string username = 4;
+  };
+}
+\end{minted}
+\caption{Exemplo Complexo de entrada para a \textit{layer} \texttt{rust-types}}
+\label{lst-rust-types-cplx-proto-src}
+\end{listing}
+
+\begin{listing}
+\begin{minted}{rust}
+/// Possible formats of content in a Post.
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Eq, Ord, Hash)]
+enum ContentFormat {
+    /// Conventional default.
+    Unknown = 0,
+    /// The post was written in plain text.
+    PlainText = 1,
+    /// The post was written in markdown.
+    Markdown = 2,
+}
+
+impl Default for ContentFormat {
+   fn default() -> Self {
+      Self::Unknown
+   }
+}
+
+/// A user in the service.
+struct User {
+    /// ID of the user.
+    pub id: i64,
+    /// Name of the user.
+    pub name: String,
+    /// Identifier of the user.
+    pub identifier: user::Identifier
+}
+
+pub mod user {
+    /// Idenfier of the user.
+    pub enum Identifier {
+        /// Default value for the OneOf. Used when no field is set.
+        NotSet,
+        /// The user used an email to identify himself.
+        Email(String),
+        /// The user used a username to identify himself.
+        Username(String)
+    }
+
+    impl Identifier {
+        pub fn is_set(&self) -> bool {
+            self != &Self::NotSet
+        }
+    }
+
+    impl Default for Identifier {
+        fn default() -> Self {
+            Self::NotSet
+        }
+    }
+}
+\end{minted}
+\caption{Exemplo Complexo de saida da \textit{layer} \texttt{rust-types}}
+\label{lst-rust-types-cplx-rust-out}
+\end{listing}
+
+\subsubsection{\texttt{rust-serde}}
+
+Outra \textit{layer} definida é aquela que integra o código gerado com a biblioteca
+de serialização/deserialização \texttt{serde} \cite{rust:serde}, a biblioteca padrão
+para essa funcionalidade. A integração é feita via diversos atributos adicionados a
+tipos, campos e membros. Por padrão, os campos são recebidos e enviados em \texttt{camelCase}
+e valores de \texttt{enum}s em \texttt{SCREAMING\_SNAKE\_CASE}, mas o \textit{casing}
+pode ser escolhido utilizado as opções \texttt{baker.api.*\_name\_case}. Os nomes também
+podem ser renomeados com as opções \texttt{baker.api.*\_name}.
+
+\subsubsection{\texttt{rust-diesel}}
+
+Para demonstrar que é possível integrar uma ORM ao código gerado sem dificuldades, uma
+\textit{layer} foi construida para integrar a ORM \texttt{diesel} \cite{rust:diesel},
+uma ORM para bancos relacionais SQL. Para a integração, atributos, \texttt{ImplBlock}s
+e diversas opções são necessários, como pode ser visto nos \cref{anex:blog-spec} e
+\cref{anex:blog-codegen}.
+
+O código gerado não somente integra com a biblioteca, mas também fornece uma série de
+utilidades para o programador que não são disponibilizadas normalmente, facilitando o
+uso do código gerado. Entre essas utilidades, está a criação de um tipo que pode ser
+utilizado nos \textit{schemas} das tabelas em colunas que armazenam \texttt{enum}s
+(\texttt{ContentFormatSql} no código gerado do \cref{anex:blog-codegen}).
+
+\subsubsection{\texttt{rust-actix}}
+
+Por fim, a última \textit{layer} desenvolvida integra com o \textit{framework} Web
+\texttt{actix-web} \cite{rust:actix-web}. A integração se preocupa em mapear
+\texttt{service}s definidos nos arquivos fonte em uma interface que o programador
+implemente sem se preocupar com detalhes do \textit{framework}. Dessa forma, todos
+os detalhes do contrato da API são gerados automaticamente e o desenvolvedor precisa
+somente se preocupar com a lógica de cada operação.
+
+Para configurar a integração, opções nos métodos \texttt{rpc} do serviço são adicionadas,
+descrevendo a rota de cada operação (junto com quaisquer variáveis de rota) e o método
+HTTP necessário. Para cada operação então, é gerado uma função que recebe a requisição
+HTTP, monta o objeto parâmetro a operação, chama o método correto da interface e converte
+a resposta do método em uma resposta HTTP.
+
+Para montar o serviço no servidor, é provido um método \texttt{configure} na interface,
+que é responsável por criar todas as rotas no servidor (\texttt{trait BlobService} no
+código gerado do \cref{anex:blog-codegen}).
+
+\subsection{\texttt{rust-codegen}}
+
+O último programa desenvolvido é o \textit{codegen} para a linguagem. Como podemos
+implementar o programa na própria linguagem, é possível utilizar tais ferramentas de
+análise (e.g. \textit{parser} e ASTs). Com essas ferramentas em mão, implementar o programa
+é uma questão de mapear a IR para a AST da linguagem. Por fim, para facilitar a leitura
+do arquivo final, o programa também executa um formatador de código no mesmo.

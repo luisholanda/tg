@@ -1,0 +1,202 @@
+\begin{minted}{protobuf}
+syntax = "proto3";
+
+package blog.api.v1;
+
+// A service that provide blog functionalities.
+service BlobService {
+  option (baker.api.default_http_body_encoding) = JSON;
+
+  // List the users in the system.
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+    option (baker.api.http_path) = "/v1/users";
+    option (baker.api.http_method) = GET;
+  }
+
+  // List a number of posts in the system.
+  rpc ListPosts(ListPostsRequest) returns (ListPostsResponse) {
+    option (baker.api.http_path) = "/v1/posts";
+    option (baker.api.http_method) = GET;
+  }
+
+  // List comments of a given post.
+  rpc ListPostComments(ListPostCommentsRequest) returns (ListPostCommentsResponse) {
+    option (baker.api.http_path) = "/v1/posts/{post}/comments";
+    option (baker.api.http_method) = GET;
+  }
+
+  // Create a post in the system.
+  rpc CreatePost(CreatePostRequest) returns (Post) {
+    option (baker.api.http_path) = "/v1/posts";
+    option (baker.api.http_method) = POST;
+  }
+
+  // Post a comment.
+  rpc PostComment(PostCommentRequest) returns (Post.Comment) {
+    option (baker.api.http_path) = "/v1/posts/{comment.post_id}/comments";
+    option (baker.api.http_method) = POST;
+  }
+
+  // {Dis}Like a post.
+  rpc LikePost(LikePostRequest) returns (Post) {
+    option (baker.api.http_path) = "/v1/posts/{post}:like";
+    option (baker.api.http_method) = POST;
+  }
+}
+
+// Request for `ListUsers` RPC method.
+message ListUsersRequest {}
+
+// Response for `ListUsers` RPC method.
+message ListUsersResponse {
+  // Users returned for the request.
+  repeated User users = 1;
+}
+
+// Request for `ListPosts` RPC method.
+message ListPostsRequest {
+  // Return posts after a given ID.
+  optional int64 after = 1;
+
+  // Limit the number of returned posts.
+  optional uint32 limit = 2;
+}
+
+// Response for `ListPosts` RPC method
+message ListPostsResponse {
+  // Posts returned for the request.
+  repeated Post posts = 1;
+}
+
+// Request for `ListPostComments` RPC method.
+message ListPostCommentsRequest {
+  // ID of the post parent of the comments to return.
+  int64 post = 1;
+
+  // Returns comments after a given ID.
+  optional int64 after = 2;
+  // Limit the number of returned posts.
+  optional uint32 limit = 2;
+}
+
+// Response for `ListPostComments` RPC method.
+message ListPostCommentsResponse {
+  // Comments returned for the request.
+  repeated Post.Comment comments = 1;
+}
+
+// Request for `CreatePost` RPC method.
+message CreatePostRequest {
+  // Post to be created
+  Post post = 1;
+  // Author of the post
+  User author = 2;
+}
+
+// Request for `PostComment` RPC method.
+message PostCommentRequest {
+  // Comment to be posted.
+  Post.Comment comment = 1;
+  // Author of the comment.
+  User author = 2;
+}
+
+// Request for `LikePost` RPC method.
+message LikePostRequest {
+  // Post to be liked or disliked.
+  int64 post = 1;
+  // If set, dislike the post.
+  bool dislike = 2;
+}
+
+// A user in the service.
+message User {
+  option (baker.orm.table_name) = "users";
+  option (baker.orm.table_path) = "crate.schema.users";
+  option (baker.orm.primary_key) = "user_id";
+
+  // ID of the user.
+  int64 id = 1 [
+    (baker.api.field_behavior) = OUTPUT_ONLY,
+    (baker.orm.column_name) = "user_id",
+  ];
+  // Name of the user.
+  string name = 2 [ (baker.api.field_behavior) = IMMUTABLE ];
+
+  // Idenfier of the user.
+  oneof identifier {
+    // The user used an email to identify himself.
+    string email = 3 [ (baker.api.field_behavior) = IMMUTABLE ];
+    // The user used a username to identify himself.
+    string username = 4 [ (baker.api.field_behavior) = IMMUTABLE ];
+  };
+}
+
+// A post in the service.
+message Post {
+  // A comment on a post in the service.
+  message Comment {
+    option (baker.orm.table_name) = "comments";
+    option (baker.orm.primary_key) = "comment_id";
+    option (baker.orm.table_path) = "crate.schema.comments";
+
+    // ID of the comment.
+    int64 id = 1 [
+      (baker.api.field_behavior) = OUTPUT_ONLY,
+      (baker.orm.column_name) = "comment_id",
+    ];
+    // ID of the post where this comment was posted.
+    int64 post_id = 2 [
+      (baker.api.field_behavior) = IMMUTABLE,
+      (baker.orm.relationship) = PARENT_ID,
+      (baker.orm.related_type) = "blog.api.v1.Post",
+    ];
+    // Author of the comment.
+    int64 author_id = 3 [
+      (baker.api.field_behavior) = IMMUTABLE,
+      (baker.orm.relationship) = PARENT_ID,
+      (baker.orm.related_type) = "blog.api.v1.User",
+    ];
+    // Content of the comment.
+    string content = 4 [ (baker.api.field_behavior) = IMMUTABLE ];
+  }
+
+  // Possible formats of content in a Post.
+  enum ContentFormat {
+    option (baker.orm.database_type) = "blog.content_format";
+
+    // Conventional default.
+    UNKNOWN = 0;
+    // The post was written in plain text.
+    PLAIN_TEXT = 1;
+    // The post was written in markdown.
+    MARKDOWN = 2;
+  }
+
+  option (baker.orm.table_name) = "posts";
+  option (baker.orm.primary_key) = "post_id";
+  option (baker.orm.table_path) = "crate.schema.posts";
+
+  // ID of the post.
+  int64 id = 1 [
+    (baker.api.field_behavior) = OUTPUT_ONLY,
+    (baker.orm.column_name) = "post_id",
+  ];
+  // Title of the post.
+  string title = 2;
+  // Likes of the post.
+  int32 likes = 3 [ (baker.api.field_behavior) = OUTPUT_ONLY ];
+  // Dislikes of the post.
+  int32 dislikes = 4 [ (baker.api.field_behavior) = OUTPUT_ONLY ];
+  // Author of the post.
+  int64 author_id = 5 [
+    (baker.api.field_behavior) = IMMUTABLE,
+    (baker.orm.relationship) = PARENT_ID,
+    (baker.orm.related_type) = "blog.api.v1.User"
+  ];
+  // Content of the post.
+  string content = 6;
+  // Format used in `content`.
+  ContentFormat content_format = 7;
+}
+\end{minted}

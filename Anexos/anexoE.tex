@@ -1,0 +1,670 @@
+\begin{minted}{rust}
+use diesel::prelude::*;
+
+use crate::schema::{posts as post_schema, users as user_schema};
+pub type UserColumns = (
+    self::user_schema::user_id,
+    self::user_schema::name,
+    (self::user_schema::email, self::user_schema::username),
+);
+pub type PostColumns = (
+    self::post_schema::post_id,
+    self::post_schema::title,
+    self::post_schema::likes,
+    self::post_schema::dislikes,
+    self::post_schema::author_id,
+    self::post_schema::content,
+    self::post_schema::content_format,
+);
+# [:: async_trait :: async_trait (? Send)]
+pub trait BlobService: ::std::marker::Send + ::std::marker::Sync + 'static {
+    /// List the users in the system.
+    async fn list_users(
+        &self,
+        req: ListUsersRequest,
+        http_req: ::actix_web::HttpRequest,
+    ) -> ::std::result::Result<ListUsersResponse, ::actix_web::error::Error>;
+    /// List a number of posts in the system.
+    async fn list_posts(
+        &self,
+        req: ListPostsRequest,
+        http_req: ::actix_web::HttpRequest,
+    ) -> ::std::result::Result<ListPostsResponse, ::actix_web::error::Error>;
+    /// List comments of a given post.
+    async fn list_post_comments(
+        &self,
+        req: ListPostCommentsRequest,
+        http_req: ::actix_web::HttpRequest,
+    ) -> ::std::result::Result<ListPostCommentsResponse, ::actix_web::error::Error>;
+    /// Create a post in the system.
+    async fn create_post(
+        &self,
+        req: CreatePostRequest,
+        http_req: ::actix_web::HttpRequest,
+    ) -> ::std::result::Result<Post, ::actix_web::error::Error>;
+    /// Post a comment.
+    async fn post_comment(
+        &self,
+        req: PostCommentRequest,
+        http_req: ::actix_web::HttpRequest,
+    ) -> ::std::result::Result<self::post::Comment, ::actix_web::error::Error>;
+    /// {Dis}Like a post.
+    async fn like_post(
+        &self,
+        req: LikePostRequest,
+        http_req: ::actix_web::HttpRequest,
+    ) -> ::std::result::Result<Post, ::actix_web::error::Error>;
+    fn configure(
+        self: ::std::sync::Arc<Self>,
+        cfg: &mut ::actix_web::web::ServiceConfig)
+    where
+        Self: ::std::marker::Sized,
+    {
+        let service: ::std::sync::Arc<dyn BlobService> = self;
+        let service: ::actix_web::web::Data<dyn BlobService> = service.into();
+        cfg.app_data(service)
+            .route(
+                "/v1/users",
+                actix_web::web::get().to(self::blob_service::list_users),
+            )
+            .route(
+                "/v1/posts",
+                actix_web::web::get().to(self::blob_service::list_posts),
+            )
+            .route(
+                "/v1/posts/{post}/comments",
+                actix_web::web::get().to(self::blob_service::list_post_comments),
+            )
+            .route(
+                "/v1/posts",
+                actix_web::web::post().to(self::blob_service::create_post),
+            )
+            .route(
+                "/v1/posts/{comment.post_id}/comments",
+                actix_web::web::post().to(self::blob_service::post_comment),
+            )
+            .route(
+                "/v1/posts/{post}",
+                actix_web::web::post().to(self::blob_service::like_post),
+            );
+    }
+}
+/// Request for `ListUsers` RPC method.
+#[derive(Clone, Debug, Default, PartialEq,
+         ::serde::Serialize, ::serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ListUsersRequest {}
+/// Response for `ListUsers` RPC method.
+#[derive(Clone, Debug, Default, PartialEq,
+         ::serde::Serialize, ::serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ListUsersResponse {
+    /// Users returned for the request.
+    #[serde(default)]
+    pub users: ::std::vec::Vec<User>,
+}
+/// Request for `ListPosts` RPC method.
+#[derive(Clone, Debug, Default, PartialEq,
+         ::serde::Serialize, ::serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ListPostsRequest {
+    /// Return posts after a given ID.
+    #[serde(default)]
+    pub after: ::std::option::Option<i64>,
+    /// Limit the number of returned posts.
+    #[serde(default)]
+    pub limit: ::std::option::Option<u32>,
+}
+/// Response for `ListPosts` RPC method
+#[derive(Clone, Debug, Default, PartialEq,
+         ::serde::Serialize, ::serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ListPostsResponse {
+    /// Posts returned for the request.
+    #[serde(default)]
+    pub posts: ::std::vec::Vec<Post>,
+}
+/// Request for `ListPostComments` RPC method.
+#[derive(Clone, Debug, Default, PartialEq,
+         ::serde::Serialize, ::serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ListPostCommentsRequest {
+    /// ID of the post parent of the comments to return.
+    #[serde(default)]
+    pub post: i64,
+    /// Returns comments after a given ID.
+    #[serde(default)]
+    pub after: ::std::option::Option<i64>,
+    /// Limit the number of returned posts.
+    #[serde(default)]
+    pub limit: ::std::option::Option<u32>,
+}
+/// Response for `ListPostComments` RPC method.
+#[derive(Clone, Debug, Default, PartialEq,
+         ::serde::Serialize, ::serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ListPostCommentsResponse {
+    /// Comments returned for the request.
+    #[serde(default)]
+    pub comments: ::std::vec::Vec<self::post::Comment>,
+}
+/// Request for `CreatePost` RPC method.
+#[derive(Clone, Debug, Default, PartialEq,
+         ::serde::Serialize, ::serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CreatePostRequest {
+    /// Post to be created
+    #[serde(default)]
+    pub post: Post,
+    /// Author of the post
+    #[serde(default)]
+    pub author: User,
+}
+/// Request for `PostComment` RPC method.
+#[derive(Clone, Debug, Default, PartialEq,
+         ::serde::Serialize, ::serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PostCommentRequest {
+    /// Comment to be posted.
+    #[serde(default)]
+    pub comment: self::post::Comment,
+    /// Author of the comment.
+    #[serde(default)]
+    pub author: User,
+}
+/// Request for `LikePost` RPC method.
+#[derive(Clone, Debug, Default, PartialEq,
+         ::serde::Serialize, ::serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LikePostRequest {
+    /// Post to be liked or disliked.
+    #[serde(default)]
+    pub post: i64,
+    /// If set, dislike the post.
+    #[serde(default)]
+    pub dislike: bool,
+}
+/// A user in the service.
+#[derive(Clone, Debug, Default, PartialEq,
+         ::serde::Serialize, ::serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+#[derive(
+    :: diesel :: Queryable,
+    :: diesel :: QueryableByName,
+    :: diesel :: Insertable,
+    :: diesel :: Identifiable,
+)]
+#[table_name = "user_schema"]
+#[primary_key(user_id)]
+pub struct User {
+    /// ID of the user.
+    #[serde(default)]
+    #[serde(skip_deserializing)]
+    #[column_name = "user_id"]
+    pub id: i64,
+    /// Name of the user.
+    #[serde(default)]
+    #[column_name = "name"]
+    pub name: ::std::string::String,
+    /// Idenfier of the user.
+    #[serde(default)]
+    #[serde(flatten)]
+    #[diesel(embed)]
+    pub identifier: self::user::Identifier,
+}
+impl User {
+    /// Return the columns in the order specified in the API spec.
+    ///
+    /// This is useful when selecting in the table and loading to the generated
+    /// struct, as diesel
+    /// requires that the order of columns match exactly as in the
+    /// [`diesel.Queryable`] implementation.
+    ///
+    /// As the schema defined order may be different than the spec order, this
+    /// function solves the
+    /// issue by providing always the correct order.
+    ///
+    /// See [`Self::all`] to a helper that already does the selection for you.
+    pub fn columns() -> UserColumns {
+        std::default::Default::default()
+    }
+    /// A query that does the correct selection when deserializing to [`Self`].
+    pub fn all() -> ::diesel::helper_types::Select<self::user_schema::table,
+                                                   UserColumns>
+    {
+        self::user_schema::table.select(Self::columns())
+    }
+}
+/// A post in the service.
+#[derive(Clone, Debug, Default, PartialEq,
+         ::serde::Serialize, ::serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+#[derive(
+    :: diesel :: Queryable,
+    :: diesel :: QueryableByName,
+    :: diesel :: Insertable,
+    :: diesel :: Identifiable,
+)]
+#[table_name = "post_schema"]
+#[primary_key(post_id)]
+#[derive(:: diesel :: Associations)]
+# [belongs_to (foreign_key = "author_id" , parent = User)]
+#[derive(:: diesel :: AsChangeset)]
+pub struct Post {
+    /// ID of the post.
+    #[serde(default)]
+    #[serde(skip_deserializing)]
+    #[column_name = "post_id"]
+    pub id: i64,
+    /// Title of the post.
+    #[serde(default)]
+    #[column_name = "title"]
+    pub title: ::std::string::String,
+    /// Likes of the post.
+    #[serde(default)]
+    #[serde(skip_deserializing)]
+    #[column_name = "likes"]
+    pub likes: i32,
+    /// Dislikes of the post.
+    #[serde(default)]
+    #[serde(skip_deserializing)]
+    #[column_name = "dislikes"]
+    pub dislikes: i32,
+    /// Author of the post.
+    #[serde(default)]
+    #[column_name = "author_id"]
+    pub author_id: i64,
+    /// Content of the post.
+    #[serde(default)]
+    #[column_name = "content"]
+    pub content: ::std::string::String,
+    /// Format used in `content`.
+    #[serde(default)]
+    #[column_name = "content_format"]
+    pub content_format: self::post::ContentFormat,
+}
+impl Post {
+    ///  Query all the rows that belongs to a given User FK value.
+    pub fn all_of_user(
+        author_id: i64,
+    ) -> ::diesel::dsl::Filter<
+        ::diesel::dsl::Select<self::post_schema::table, PostColumns>,
+        ::diesel::dsl::Eq<self::post_schema::author_id, i64>,
+    > {
+        Self::all().filter(self::post_schema::author_id.eq(author_id))
+    }
+}
+impl Post {
+    /// Return the columns in the order specified in the API spec.
+    ///
+    /// This is useful when selecting in the table and loading to the generated
+    /// struct, as diesel
+    /// requires that the order of columns match exactly as in the
+    /// [`diesel.Queryable`] implementation.
+    ///
+    /// As the schema defined order may be different than the spec order, this
+    /// function solves the
+    /// issue by providing always the correct order.
+    ///
+    /// See [`Self::all`] to a helper that already does the selection for you.
+    pub fn columns() -> PostColumns {
+        std::default::Default::default()
+    }
+    /// A query that does the correct selection when deserializing to [`Self`].
+    pub fn all() -> ::diesel::helper_types::Select<self::post_schema::table,
+                                                   PostColumns>
+    {
+        self::post_schema::table.select(Self::columns())
+    }
+}
+pub mod user {
+    use ::diesel::prelude::*;
+    #[doc(hidden)]
+    pub type __IdentifierValues = (
+        ::std::option::Option<
+            ::diesel::helper_types::Eq<
+                super::user_schema::email,
+                ::std::string::String
+            >,
+        >,
+        ::std::option::Option<
+            ::diesel::helper_types::Eq<
+                super::user_schema::username,
+                ::std::string::String
+            >,
+        >,
+    );
+    #[doc(hidden)]
+    pub type __IdentifierByRefValues<'insert> = (
+        ::std::option::Option<
+            ::diesel::helper_types::Eq<
+                super::user_schema::email,
+                &'insert ::std::string::String
+            >,
+        >,
+        ::std::option::Option<
+            ::diesel::helper_types::Eq<
+                super::user_schema::username,
+                &'insert ::std::string::String,
+            >,
+        >,
+    );
+    #[doc(hidden)]
+    pub type __IdentifierQueryableRow = (
+        ::std::option::Option<::std::string::String>,
+        ::std::option::Option<::std::string::String>,
+    );
+    /// Idenfier of the user.
+    #[derive(Debug, Clone, PartialEq,
+         ::serde::Serialize, ::serde::Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    pub enum Identifier {
+        /// Default value for the OneOf. Used when no field is set.
+        NotSet,
+        /// The user used an email to identify himself.
+        Email(::std::string::String),
+        /// The user used a username to identify himself.
+        Username(::std::string::String),
+    }
+    impl Identifier {
+        pub fn is_set(&self) -> bool {
+            self != &Self::NotSet
+        }
+    }
+    impl ::std::default::Default for Identifier {
+        fn default() -> Self {
+            Self::NotSet
+        }
+    }
+    impl ::diesel::Insertable<super::user_schema::table> for Identifier {
+        type Values =
+            <__IdentifierValues as
+                ::diesel::Insertable<super::user_schema::table>
+            >::Values;
+        fn values(self) -> Self::Values {
+            let mut values: __IdentifierValues =
+                ::std::default::Default::default();
+            match self {
+                Self::Email(x) => {
+                    values.0 = ::std::option::Option::Some(
+                        super::user_schema::email.eq(x)
+                    );
+                }
+                Self::Username(x) => {
+                    values.1 = ::std::option::Option::Some(
+                        super::user_schema::username.eq(x)
+                    );
+                }
+                _ => {}
+            }
+            values.values()
+        }
+    }
+    impl<__ST, __DB> ::diesel::Queryable<__ST, __DB> for Identifier
+    where
+        __DB: ::diesel::backend::Backend,
+        __IdentifierQueryableRow: ::diesel::Queryable<__ST, __DB>,
+    {
+        type Row = <__IdentifierQueryableRow as ::diesel::Queryable<__ST, __DB>>::Row;
+        fn build(row: Self::Row) -> Self {
+            match __IdentifierQueryableRow::build(row) {
+                (std::option::Option::Some(x), ::std::option::Option::None) => Self::Email(x),
+                (::std::option::Option::None, std::option::Option::Some(x)) => Self::Username(x),
+                _ => ::std::default::Default::default(),
+            }
+        }
+    }
+    impl<'insert> ::diesel::Insertable<super::user_schema::table> for &'insert Identifier {
+        type Values = <__IdentifierByRefValues<'insert> as ::diesel::Insertable<
+            super::user_schema::table,
+        >>::Values;
+        fn values(self) -> Self::Values {
+            let mut values: __IdentifierByRefValues<'insert> = ::std::default::Default::default();
+            match self {
+                Identifier::Email(x) => {
+                    values.0 = ::std::option::Option::Some(super::user_schema::email.eq(x));
+                }
+                Identifier::Username(x) => {
+                    values.1 = ::std::option::Option::Some(super::user_schema::username.eq(x));
+                }
+                _ => {}
+            }
+            values.values()
+        }
+    }
+}
+pub mod blob_service {
+    use ::actix_web::FromRequest as __FromRequest;
+    /// List the users in the system.
+    pub async fn list_users(
+        service: ::actix_web::web::Data<dyn super::BlobService>,
+        payload: ::actix_web::web::Query<super::ListUsersRequest>,
+        http_req: ::actix_web::HttpRequest,
+    ) -> ::std::result::Result<::actix_web::web::Json<super::ListUsersResponse>, ::actix_web::Error>
+    {
+        let request = payload.into_inner();
+        let response = service.list_users(request, http_req).await?;
+        ::std::result::Result::Ok(::actix_web::web::Json(response))
+    }
+    /// List a number of posts in the system.
+    pub async fn list_posts(
+        service: ::actix_web::web::Data<dyn super::BlobService>,
+        payload: ::actix_web::web::Query<super::ListPostsRequest>,
+        http_req: ::actix_web::HttpRequest,
+    ) -> ::std::result::Result<::actix_web::web::Json<super::ListPostsResponse>, ::actix_web::Error>
+    {
+        let request = payload.into_inner();
+        let response = service.list_posts(request, http_req).await?;
+        ::std::result::Result::Ok(::actix_web::web::Json(response))
+    }
+    /// List comments of a given post.
+    pub async fn list_post_comments(
+        service: ::actix_web::web::Data<dyn super::BlobService>,
+        payload: ::actix_web::web::Query<super::ListPostCommentsRequest>,
+        http_req: ::actix_web::HttpRequest,
+    ) -> ::std::result::Result<
+        ::actix_web::web::Json<super::ListPostCommentsResponse>,
+        ::actix_web::Error,
+    > {
+        let mut request = payload.into_inner();
+        let ::actix_web::web::Path((post,)) = ::actix_web::web::Path::extract(&http_req).await?;
+        request.post = post;
+        let response = service.list_post_comments(request, http_req).await?;
+        ::std::result::Result::Ok(::actix_web::web::Json(response))
+    }
+    /// Create a post in the system.
+    pub async fn create_post(
+        service: ::actix_web::web::Data<dyn super::BlobService>,
+        payload: ::actix_web::web::Json<super::CreatePostRequest>,
+        http_req: ::actix_web::HttpRequest,
+    ) -> ::std::result::Result<::actix_web::web::Json<super::Post>, ::actix_web::Error> {
+        let request = payload.into_inner();
+        let response = service.create_post(request, http_req).await?;
+        ::std::result::Result::Ok(::actix_web::web::Json(response))
+    }
+    /// Post a comment.
+    pub async fn post_comment(
+        service: ::actix_web::web::Data<dyn super::BlobService>,
+        payload: ::actix_web::web::Json<super::PostCommentRequest>,
+        http_req: ::actix_web::HttpRequest,
+    ) -> ::std::result::Result<::actix_web::web::Json<super::post::Comment>, ::actix_web::Error>
+    {
+        let mut request = payload.into_inner();
+        let ::actix_web::web::Path((post_id,)) = ::actix_web::web::Path::extract(&http_req).await?;
+        request.comment.post_id = post_id;
+        let response = service.post_comment(request, http_req).await?;
+        ::std::result::Result::Ok(::actix_web::web::Json(response))
+    }
+    /// {Dis}Like a post.
+    pub async fn like_post(
+        service: ::actix_web::web::Data<dyn super::BlobService>,
+        payload: ::actix_web::web::Json<super::LikePostRequest>,
+        http_req: ::actix_web::HttpRequest,
+    ) -> ::std::result::Result<::actix_web::web::Json<super::Post>, ::actix_web::Error> {
+        let mut request = payload.into_inner();
+        let ::actix_web::web::Path((post,)) = ::actix_web::web::Path::extract(&http_req).await?;
+        request.post = post;
+        let response = service.like_post(request, http_req).await?;
+        ::std::result::Result::Ok(::actix_web::web::Json(response))
+    }
+}
+pub mod post {
+    use std::io::Write as __Write;
+
+    use diesel::prelude::*;
+
+    use crate::schema::comments as comment_schema;
+    pub type CommentColumns = (
+        self::comment_schema::comment_id,
+        self::comment_schema::post_id,
+        self::comment_schema::author_id,
+        self::comment_schema::content,
+    );
+    /// A comment on a post in the service.
+    #[derive(Clone, Debug, Default, PartialEq,
+             ::serde::Serialize, ::serde::Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    #[derive(
+        ::diesel::Queryable,
+        ::diesel::QueryableByName,
+        ::diesel::Insertable,
+        ::diesel::Identifiable,
+    )]
+    #[table_name = "comment_schema"]
+    #[primary_key(comment_id)]
+    #[derive(::diesel::Associations)]
+    #[belongs_to(foreign_key = "author_id" , parent = super::User)]
+    #[belongs_to(parent = super::Post , foreign_key = "post_id")]
+    #[derive(::diesel::AsChangeset)]
+    pub struct Comment {
+        /// ID of the comment.
+        #[serde(default)]
+        #[serde(skip_deserializing)]
+        #[column_name = "comment_id"]
+        pub id: i64,
+        /// ID of the post where this comment was posted.
+        #[serde(default)]
+        #[column_name = "post_id"]
+        pub post_id: i64,
+        /// Author of the comment.
+        #[serde(default)]
+        #[column_name = "author_id"]
+        pub author_id: i64,
+        /// Content of the comment.
+        #[serde(default)]
+        #[column_name = "content"]
+        pub content: ::std::string::String,
+    }
+    impl Comment {
+        ///  Query all the rows that belongs to a given User FK value.
+        pub fn all_of_user(
+            author_id: i64,
+        ) -> ::diesel::dsl::Filter<
+            ::diesel::dsl::Select<self::comment_schema::table, CommentColumns>,
+            ::diesel::dsl::Eq<self::comment_schema::author_id, i64>,
+        > {
+            Self::all().filter(self::comment_schema::author_id.eq(author_id))
+        }
+        ///  Query all the rows that belongs to a given Post FK value.
+        pub fn all_of_post(
+            post_id: i64,
+        ) -> ::diesel::dsl::Filter<
+            ::diesel::dsl::Select<self::comment_schema::table, CommentColumns>,
+            ::diesel::dsl::Eq<self::comment_schema::post_id, i64>,
+        > {
+            Self::all().filter(self::comment_schema::post_id.eq(post_id))
+        }
+    }
+    impl Comment {
+        /// Return the columns in the order specified in the API spec.
+        ///
+        /// This is useful when selecting in the table and loading to the
+        /// generated struct, as diesel
+        /// requires that the order of columns match exactly as in the
+        /// [`diesel.Queryable`] implementation.
+        ///
+        /// As the schema defined order may be different than the spec order,
+        /// this function solves the
+        /// issue by providing always the correct order.
+        ///
+        /// See [`Self::all`] to a helper that already does the selection for
+        /// you.
+        pub fn columns() -> CommentColumns {
+            std::default::Default::default()
+        }
+        /// A query that does the correct selection when deserializing to
+        /// [`Self`].
+        pub fn all() -> ::diesel::helper_types::Select<self::comment_schema::table, CommentColumns>
+        {
+            self::comment_schema::table.select(Self::columns())
+        }
+    }
+    /// Possible formats of content in a Post.
+    #[derive(
+        Debug,
+        Copy,
+        Clone,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        :: serde :: Serialize,
+        :: serde :: Deserialize,
+    )]
+    #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+    #[derive(:: diesel :: AsExpression, :: diesel :: FromSqlRow)]
+    #[sql_type = "ContentFormatSql"]
+    pub enum ContentFormat {
+        /// Conventional default.
+        Unknown = 0,
+        /// The post was written in plain text.
+        PlainText = 1,
+        /// The post was written in markdown.
+        Markdown = 2,
+    }
+    impl ::std::default::Default for ContentFormat {
+        fn default() -> Self {
+            Self::Unknown
+        }
+    }
+    impl ::diesel::deserialize::FromSql<ContentFormatSql, ::diesel::pg::Pg> for ContentFormat {
+        fn from_sql(raw: ::std::option::Option<&[u8]>) -> ::diesel::deserialize::Result<Self> {
+            match ::diesel::not_none!(raw) {
+                b"UNKNOWN" => ::std::result::Result::Ok(Self::Unknown),
+                b"PLAIN_TEXT" => ::std::result::Result::Ok(Self::PlainText),
+                b"MARKDOWN" => ::std::result::Result::Ok(Self::Markdown),
+                v => ::std::result::Result::Err(
+                    format!(
+                        "Unrecognized enum variant: '{}'",
+                        ::std::string::String::from_utf8_lossy(v)
+                    )
+                    .into(),
+                ),
+            }
+        }
+    }
+    impl<__DB> ::diesel::serialize::ToSql<ContentFormatSql, __DB> for ContentFormat
+    where
+        __DB: ::diesel::backend::Backend,
+    {
+        fn to_sql<W>(
+            &self,
+            out: &mut ::diesel::serialize::Output<W, __DB>,
+        ) -> ::diesel::serialize::Result
+        where
+            W: ::std::io::Write,
+        {
+            match *self {
+                Self::Unknown => out.write_all(b"UNKNOWN")?,
+                Self::PlainText => out.write_all(b"PLAIN_TEXT")?,
+                Self::Markdown => out.write_all(b"MARKDOWN")?,
+            }
+            ::std::result::Result::Ok(::diesel::serialize::IsNull::No)
+        }
+    }
+    #[derive(:: diesel :: SqlType, :: diesel :: QueryId, Clone, Copy)]
+    #[postgres(type_name = "content_format", type_schema = "blog")]
+    pub struct ContentFormatSql {}
+}
+\end{minted}
