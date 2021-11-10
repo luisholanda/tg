@@ -1,0 +1,101 @@
+Para validarmos a viabilidade da solução, o funcionamento dos geradores implementados e
+a qualidade do código resultante, um serviço Web simples foi implementado. Esse serviço
+implementa um pequeno blog público, em que usuários podem postar mensagens, comentários
+e votar em outras postagens. Mantendo a API simples, conseguimos focar melhor no impacto
+do código gerado. A especificação da API é apresentada no \cref{anex:blog-spec}.
+
+Em seguida, foi realizado uma pesquisa com alguns desenvolvedores da empresa TerraMagna,
+para que esses julguem a qualidade do código gerado. Por fim, foi feito uma análise de
+outras oportunidades de geradores que facilitariam a implementação de serviços no time.
+
+\section{Implementação do Serviço Web}
+
+Na implementação do serviço, o código gerado é responsável por 64.8\% das linhas de código
+total da implementação (633 de 976 linhas). O código gerado é apresentado na integra no
+\cref{anex:blog-codegen}. Dessas 633 linhas:
+
+\begin{itemize}
+\item 135 são da integração com o \textit{framework} web;
+\item 228 são da integração com a ORM;
+\item os 270 restantes são definições de estruturas.
+\end{itemize}
+
+O código implementado manualmente é responsável apenas pela regra de negócio da aplicação,
+não precisando se preocupar com detalhes de interface da API ou diversos detalhes de
+bancos de dados.
+
+A medida que a complexidade do serviço aumenta e a quantidade de regras de negócio aumenta,
+a porcentagem total do código gerado diminui. Contudo, outras vantagens se mantém:
+
+\begin{itemize}
+\item O programador não precisa se preocupar em implementar as estruturas manualmente com
+  base na especificação. Em situações multi-linguagem ou multi-repositórios, garantir que
+  as implementações manuais obedecem o contrato especificado torna-se complexo. Esse tipo
+  de situação é muito comum, principalmente durante o processo de evolução da API.
+\item Pelo mesmo motivo, testes de contrato não são, em grande parte, necessários, pois o
+  serviço foi gerado a partir da especificação. Apenas testes de contrato para erros são
+  necessários, caso o time os faça, já que a especificação não declara tais casos.
+\item A especificação continua sendo a fonte da verdade: em sistemas complexos, uma grande
+  quantidade de APIs são implementadas e disponibilizadas, ter a garantia de que as operações
+  especificadas são as que estão disponíveis facilita a entrade de novos desenvolvedores no
+  time e o descobrimento das operações pelos clientes.
+\end{itemize}
+
+\section{Qualidade do Código Gerado}
+
+Quando apresentados a um gerador de código, um dos fatores que dificultam o uso é a qualidade
+do código gerado e o quão complexo ele é. Um código complexo de se entender é mais difícil
+de ser absorvido caso o time queria deixar de usar o gerador.
+
+Para validarmos que essa preocupação não afetaria o uso dos geradores implementados, uma
+pesquisa qualitativa foi realizada com membros do time de desenvolvimento da TerraMagna com
+um variado grau de senioridade. Nessa pesquisa, após apresentado os \cref{anex:blog-spec} e
+\cref{anex:blog-codegen}, foi feito as seguintes perguntas:
+
+\begin{enumerate}
+\item Alguma parte do código que deixa claro que ele foi gerado?
+\item É possível entender o que o código faz e como ele é usado?
+\item Na hipótese que o gerador deixe de ser usado, você acharia complexo limpar o código?
+\end{enumerate}
+
+As respostas à pesquisa foram bem similares. O fato dos caminhos serem absolutos deixa claro
+que o código foi gerado, pois programadores em geral importam items específicos ou criam
+\textit{aliases} para caminhos extensos. Contudo, o código continua sendo simples de se
+entender e usar. Todos os entrevistados declararam que conseguiriam limpar o código sem
+grandes dificuldades, principalmente contando com a ajuda de um bom editor de texto. Além
+disso, todos também comentaram que prefeririam usar o código gerado para não terem que
+escrever códigos repetitivos.
+
+Caminhos absolutos são utilizados na implementação atual dos geradores para evitarem conflitos
+com estruturas declaradas na especificação. Uma melhoria futura nos geradores pode utilizar a
+lista de estruturas para determinar se um caminho absoluto é necessário ou não. Essa foi a
+principal observação e sugestão feita pelos entrevistados.
+
+\section{Oportunidades}
+
+Apesar de os geradores atuais já facilitarem a implementação de serviços Web, é necessário
+entender se há oportunidades para outros geradores. A falta de oportunidades mostraria que
+o uso de geradores em ambientes \textit{enterprise} é de fato limitado.
+
+Analisando o código dos serviços internos da empresa, encontramos as seguintes oportunidades:
+
+\begin{itemize}
+\item Suportar outros sistemas de bancos de dados que não utilizam \texttt{diesel}, como
+  Firestore \cite{google:megastore}.
+\item Suportar a declaração de mensagems para o sistema de mensageria interno da empresa.
+\item Permitir a especificação de requisitos de autorização para os métodos \texttt{rpc}
+  seguindo o padrão da empresa, e.g. a operação \texttt{CreateFoo} requer a permissão
+  \texttt{BAR.FOO.WRITE}.
+\item Declarar condições de estabilidade das operações: \textit{alpha}, \textit{beta},
+  \textit{internal only}, \textit{external}. Essas condições são importantes para testes
+  e evolução das APIs sem impactar clientes.
+\item Integração com o sistema de monitoramento e observabilidade automático para as operações.
+\end{itemize}
+
+Essas oportunidades são apenas aquelas que impactam a implementação do serviço \textit{per se}.
+Diversas outras oportunidades podem existir quando também consideramos que podemos utilizar
+as especificações para gerar clientes.
+
+Com essa lista, podemos perceber que existem diversas formas que o projeto implementado pode
+simplificar a implementação dos serviços, aumentar a segurança e confiabilidade dos serviços
+e também diminuir a carga cognitiva dos desenvolvedores envolvidos no sistema.

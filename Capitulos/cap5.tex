@@ -1,0 +1,41 @@
+Nesse trabalho, foi apresentado os principais problemas que geradores de código
+possuem atualmente. Dentre eles, uma limitação de sua extensibilidade causada
+pela própria arquitetura do gerador.
+
+Em seguida, apresentamos a arquitetura de novo gerador de código, \Baker{}, focada
+na extensibilidade, e mostramos como essa pode ser utilizada para integrar de forma
+arbitrária diversas bibliotecas ou funcionalidades sem a necessidade de construir um
+gerador para cada combinação, apenas para cada integração.
+
+Também construimos um experimento que mostra que a arquitetura apresentada
+resolve os problemas apresentados nas soluções anteriores, implementando
+integrações com \textit{frameworks} Web e ORMs.
+
+O experimento também foi capaz de validar como a existência de um gerador na
+caixa de ferramentas de um time é capaz de acelerar o desenvolvimento, $~65\%$
+do código total do experimento é gerado a partir da especificação, permitindo
+que os desenvolvedores se preocupem apenas com a implementação das regras de
+negócio do serviço.
+
+Uma análise da \textit{codebase} do time também mostrou diversas possibilidades
+para outros geradores que aumentariam ainda mais a eficiência do time e a
+confiabilidade do serviço.
+
+Contudo, ao longo do projeto, diversas simplificações foram feitas e oportunidades
+de melhorias foram descobertas. Acreditamos que trabalhos futuros sejam capazes
+de utilizar tais oportunidades para melhorar a arquitetura ou implementação.
+
+\begin{itemize}
+\item A implementação utiliza um \textit{parser} próprio para a IDL utilizada,
+  trabalhos futuros podem utilizar o compilador original dela para simplificar a
+  implementação, melhorar mensagens de erros e o suporte a linguagem. Além disso,
+  o uso de estruturas padrões do compilador permitiria que uma melhor integração
+  com o resto do ecossistema.
+\item Como observado no \cref{cap:project}, o algoritmo para a combinação dos
+  diversos fragmentos de IR é simples, não suportando diversos casos de uso
+  relevantes. Trabalhos futuros poderiam estudar e formalizar algoritmos mais precisos
+  que suportem um número maior de casos.
+\item No momento, a IR suporta apenas o que foi necessário para o experimento,
+  estudos e melhorias futuras são necessários para suportar um maior número de
+  geradores.
+\end{itemize}
