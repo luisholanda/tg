@@ -405,27 +405,41 @@ pub mod user {
         __DB: ::diesel::backend::Backend,
         __IdentifierQueryableRow: ::diesel::Queryable<__ST, __DB>,
     {
-        type Row = <__IdentifierQueryableRow as ::diesel::Queryable<__ST, __DB>>::Row;
+        type Row =
+            <__IdentifierQueryableRow as ::diesel::Queryable<__ST, __DB>>::Row;
         fn build(row: Self::Row) -> Self {
             match __IdentifierQueryableRow::build(row) {
-                (std::option::Option::Some(x), ::std::option::Option::None) => Self::Email(x),
-                (::std::option::Option::None, std::option::Option::Some(x)) => Self::Username(x),
+                (
+                    std::option::Option::Some(x),
+                    ::std::option::Option::None,
+                ) => Self::Email(x),
+                (
+                    ::std::option::Option::None,
+                    std::option::Option::Some(x),
+                ) => Self::Username(x),
                 _ => ::std::default::Default::default(),
             }
         }
     }
-    impl<'insert> ::diesel::Insertable<super::user_schema::table> for &'insert Identifier {
+    impl<'insert> ::diesel::Insertable<super::user_schema::table> for
+        &'insert Identifier
+    {
         type Values = <__IdentifierByRefValues<'insert> as ::diesel::Insertable<
             super::user_schema::table,
         >>::Values;
         fn values(self) -> Self::Values {
-            let mut values: __IdentifierByRefValues<'insert> = ::std::default::Default::default();
+            let mut values: __IdentifierByRefValues<'insert> =
+                ::std::default::Default::default();
             match self {
                 Identifier::Email(x) => {
-                    values.0 = ::std::option::Option::Some(super::user_schema::email.eq(x));
+                    values.0 = ::std::option::Option::Some(
+                        super::user_schema::email.eq(x)
+                    );
                 }
                 Identifier::Username(x) => {
-                    values.1 = ::std::option::Option::Some(super::user_schema::username.eq(x));
+                    values.1 = ::std::option::Option::Some(
+                        super::user_schema::username.eq(x)
+                    );
                 }
                 _ => {}
             }
@@ -440,8 +454,10 @@ pub mod blob_service {
         service: ::actix_web::web::Data<dyn super::BlobService>,
         payload: ::actix_web::web::Query<super::ListUsersRequest>,
         http_req: ::actix_web::HttpRequest,
-    ) -> ::std::result::Result<::actix_web::web::Json<super::ListUsersResponse>, ::actix_web::Error>
-    {
+    ) -> ::std::result::Result<
+        ::actix_web::web::Json<super::ListUsersResponse>,
+        ::actix_web::Error,
+    > {
         let request = payload.into_inner();
         let response = service.list_users(request, http_req).await?;
         ::std::result::Result::Ok(::actix_web::web::Json(response))
@@ -451,8 +467,10 @@ pub mod blob_service {
         service: ::actix_web::web::Data<dyn super::BlobService>,
         payload: ::actix_web::web::Query<super::ListPostsRequest>,
         http_req: ::actix_web::HttpRequest,
-    ) -> ::std::result::Result<::actix_web::web::Json<super::ListPostsResponse>, ::actix_web::Error>
-    {
+    ) -> ::std::result::Result<
+        ::actix_web::web::Json<super::ListPostsResponse>,
+        ::actix_web::Error,
+    > {
         let request = payload.into_inner();
         let response = service.list_posts(request, http_req).await?;
         ::std::result::Result::Ok(::actix_web::web::Json(response))
@@ -467,7 +485,8 @@ pub mod blob_service {
         ::actix_web::Error,
     > {
         let mut request = payload.into_inner();
-        let ::actix_web::web::Path((post,)) = ::actix_web::web::Path::extract(&http_req).await?;
+        let ::actix_web::web::Path((post,)) =
+            ::actix_web::web::Path::extract(&http_req).await?;
         request.post = post;
         let response = service.list_post_comments(request, http_req).await?;
         ::std::result::Result::Ok(::actix_web::web::Json(response))
@@ -477,7 +496,10 @@ pub mod blob_service {
         service: ::actix_web::web::Data<dyn super::BlobService>,
         payload: ::actix_web::web::Json<super::CreatePostRequest>,
         http_req: ::actix_web::HttpRequest,
-    ) -> ::std::result::Result<::actix_web::web::Json<super::Post>, ::actix_web::Error> {
+    ) -> ::std::result::Result<
+        ::actix_web::web::Json<super::Post>,
+        ::actix_web::Error,
+    > {
         let request = payload.into_inner();
         let response = service.create_post(request, http_req).await?;
         ::std::result::Result::Ok(::actix_web::web::Json(response))
@@ -487,10 +509,13 @@ pub mod blob_service {
         service: ::actix_web::web::Data<dyn super::BlobService>,
         payload: ::actix_web::web::Json<super::PostCommentRequest>,
         http_req: ::actix_web::HttpRequest,
-    ) -> ::std::result::Result<::actix_web::web::Json<super::post::Comment>, ::actix_web::Error>
-    {
+    ) -> ::std::result::Result<
+        ::actix_web::web::Json<super::post::Comment>,
+        ::actix_web::Error,
+    > {
         let mut request = payload.into_inner();
-        let ::actix_web::web::Path((post_id,)) = ::actix_web::web::Path::extract(&http_req).await?;
+        let ::actix_web::web::Path((post_id,)) =
+            ::actix_web::web::Path::extract(&http_req).await?;
         request.comment.post_id = post_id;
         let response = service.post_comment(request, http_req).await?;
         ::std::result::Result::Ok(::actix_web::web::Json(response))
@@ -500,9 +525,13 @@ pub mod blob_service {
         service: ::actix_web::web::Data<dyn super::BlobService>,
         payload: ::actix_web::web::Json<super::LikePostRequest>,
         http_req: ::actix_web::HttpRequest,
-    ) -> ::std::result::Result<::actix_web::web::Json<super::Post>, ::actix_web::Error> {
+    ) -> ::std::result::Result<
+        ::actix_web::web::Json<super::Post>,
+        ::actix_web::Error,
+    > {
         let mut request = payload.into_inner();
-        let ::actix_web::web::Path((post,)) = ::actix_web::web::Path::extract(&http_req).await?;
+        let ::actix_web::web::Path((post,)) =
+            ::actix_web::web::Path::extract(&http_req).await?;
         request.post = post;
         let response = service.like_post(request, http_req).await?;
         ::std::result::Result::Ok(::actix_web::web::Json(response))
@@ -594,7 +623,8 @@ pub mod post {
         }
         /// A query that does the correct selection when deserializing to
         /// [`Self`].
-        pub fn all() -> ::diesel::helper_types::Select<self::comment_schema::table, CommentColumns>
+        pub fn all() -> ::diesel::helper_types::Select<self::comment_schema::table,
+                                                       CommentColumns>
         {
             self::comment_schema::table.select(Self::columns())
         }
@@ -628,8 +658,13 @@ pub mod post {
             Self::Unknown
         }
     }
-    impl ::diesel::deserialize::FromSql<ContentFormatSql, ::diesel::pg::Pg> for ContentFormat {
-        fn from_sql(raw: ::std::option::Option<&[u8]>) -> ::diesel::deserialize::Result<Self> {
+    impl ::diesel::deserialize::FromSql<ContentFormatSql, ::diesel::pg::Pg> for
+        ContentFormat
+    {
+        fn from_sql(
+            raw: ::std::option::Option<&[u8]>,
+        ) -> ::diesel::deserialize::Result<Self>
+        {
             match ::diesel::not_none!(raw) {
                 b"UNKNOWN" => ::std::result::Result::Ok(Self::Unknown),
                 b"PLAIN_TEXT" => ::std::result::Result::Ok(Self::PlainText),
@@ -644,7 +679,8 @@ pub mod post {
             }
         }
     }
-    impl<__DB> ::diesel::serialize::ToSql<ContentFormatSql, __DB> for ContentFormat
+    impl<__DB> ::diesel::serialize::ToSql<ContentFormatSql, __DB> for
+        ContentFormat
     where
         __DB: ::diesel::backend::Backend,
     {
