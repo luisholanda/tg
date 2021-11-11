@@ -4,14 +4,14 @@ implementa um pequeno blog público, em que usuários podem postar mensagens, co
 e votar em outras postagens. Mantendo a API simples, conseguimos focar melhor no impacto
 do código gerado. A especificação da API é apresentada no \cref{anex:blog-spec}.
 
-Em seguida, foi realizado uma pesquisa com alguns desenvolvedores da empresa TerraMagna,
-para que esses julguem a qualidade do código gerado. Por fim, foi feito uma análise de
+Em seguida, foi realizada uma pesquisa com alguns desenvolvedores da empresa TerraMagna,
+para que esses julguassem a qualidade do código gerado. Por fim, foi feita uma análise de
 outras oportunidades de geradores que facilitariam a implementação de serviços no time.
 
 \section{Implementação do Serviço Web}
 
 Na implementação do serviço, o código gerado é responsável por 64.8\% das linhas de código
-total da implementação (633 de 976 linhas). O código gerado é apresentado na integra no
+total da implementação (633 de 976 linhas). O código gerado é apresentado na íntegra no
 \cref{anex:blog-codegen}. Dessas 633 linhas:
 
 \begin{itemize}
@@ -21,36 +21,37 @@ total da implementação (633 de 976 linhas). O código gerado é apresentado na
 \end{itemize}
 
 O código implementado manualmente é responsável apenas pela regra de negócio da aplicação,
-não precisando se preocupar com detalhes de interface da API ou diversos detalhes de
-bancos de dados.
+dispensando preocupação com detalhes de interface da API ou diversos detalhes de bancos
+de dados.
 
-A medida que a complexidade do serviço aumenta e a quantidade de regras de negócio aumenta,
-a porcentagem total do código gerado diminui. Contudo, outras vantagens se mantém:
+À medida que a complexidade do serviço aumenta e a quantidade de regras de negócio também,
+a porcentagem total do código gerado diminui. Contudo, outras vantagens se mantêm:
 
 \begin{itemize}
 \item O programador não precisa se preocupar em implementar as estruturas manualmente com
   base na especificação. Em situações multi-linguagem ou multi-repositórios, garantir que
-  as implementações manuais obedecem o contrato especificado torna-se complexo. Esse tipo
+  as implementações manuais obedeçam o contrato especificado torna-se complexo. Esse tipo
   de situação é muito comum, principalmente durante o processo de evolução da API.
 \item Pelo mesmo motivo, testes de contrato não são, em grande parte, necessários, pois o
   serviço foi gerado a partir da especificação. Apenas testes de contrato para erros são
   necessários, caso o time os faça, já que a especificação não declara tais casos.
 \item A especificação continua sendo a fonte da verdade: em sistemas complexos, uma grande
   quantidade de APIs são implementadas e disponibilizadas, ter a garantia de que as operações
-  especificadas são as que estão disponíveis facilita a entrade de novos desenvolvedores no
+  especificadas são as que estão disponíveis facilita a entrada de novos desenvolvedores no
   time e o descobrimento das operações pelos clientes.
 \end{itemize}
 
 \section{Qualidade do Código Gerado}
 
 Quando apresentados a um gerador de código, um dos fatores que dificultam o uso é a qualidade
-do código gerado e o quão complexo ele é. Um código complexo de se entender é mais difícil
-de ser absorvido caso o time queria deixar de usar o gerador.
+do código gerado e o quão complexo ele é. Na situação em que o time decide deixar de utilizar
+o gerador, os desenvolvedores devem manter o código que foi gerado, quanto mais complexo este
+for, mais difícil é esse processo.
 
 Para validarmos que essa preocupação não afetaria o uso dos geradores implementados, uma
 pesquisa qualitativa foi realizada com membros do time de desenvolvimento da TerraMagna com
-um variado grau de senioridade. Nessa pesquisa, após apresentado os \cref{anex:blog-spec} e
-\cref{anex:blog-codegen}, foi feito as seguintes perguntas:
+um variado grau de senioridade. Nessa pesquisa, após apresentados os \cref{anex:blog-spec} e
+\cref{anex:blog-codegen}, foram feitas as seguintes perguntas:
 
 \begin{enumerate}
 \item Alguma parte do código que deixa claro que ele foi gerado?
@@ -59,7 +60,7 @@ um variado grau de senioridade. Nessa pesquisa, após apresentado os \cref{anex:
 \end{enumerate}
 
 As respostas à pesquisa foram bem similares. O fato dos caminhos serem absolutos deixa claro
-que o código foi gerado, pois programadores em geral importam items específicos ou criam
+que o código foi gerado, pois programadores em geral importam itens específicos ou criam
 \textit{aliases} para caminhos extensos. Contudo, o código continua sendo simples de se
 entender e usar. Todos os entrevistados declararam que conseguiriam limpar o código sem
 grandes dificuldades, principalmente contando com a ajuda de um bom editor de texto. Além
@@ -75,7 +76,7 @@ principal observação e sugestão feita pelos entrevistados.
 
 Apesar de os geradores atuais já facilitarem a implementação de serviços Web, é necessário
 entender se há oportunidades para outros geradores. A falta de oportunidades mostraria que
-o uso de geradores em ambientes \textit{enterprise} é de fato limitado.
+o uso de geradores em ambientes \textit{enterprise} é, de fato, limitado.
 
 Analisando o código dos serviços internos da empresa, encontramos as seguintes oportunidades:
 
@@ -94,7 +95,8 @@ Analisando o código dos serviços internos da empresa, encontramos as seguintes
 
 Essas oportunidades são apenas aquelas que impactam a implementação do serviço \textit{per se}.
 Diversas outras oportunidades podem existir quando também consideramos que podemos utilizar
-as especificações para gerar clientes.
+as especificações para gerar clientes, como integrações com bibliotecas de armazenamento em
+memória (e.g. \textit{React Redux}).
 
 Com essa lista, podemos perceber que existem diversas formas que o projeto implementado pode
 simplificar a implementação dos serviços, aumentar a segurança e confiabilidade dos serviços

@@ -1,9 +1,9 @@
 \section{Experimento}
 
-Para experimentarmos com a plataforma, identificar pontos de melhoria durante a construção e
+Para experimentarmos a plataforma, identificar pontos de melhoria durante a construção e
 servir como base para o experimento de validação, construimos uma série de \textit{layers} e
 um \textit{codegen} para a linguagem de programação Rust \cite{rust:site}. Os geradores foram
-escolhidos com o objetivo de permitir usuários construirem serviços Web utilizando a plataforma.
+escolhidos com o objetivo de permitir a usuários construir serviços Web utilizando a plataforma.
 
 \subsection{\textit{Layers} Definidas}
 
@@ -20,12 +20,12 @@ objeto. Esse deve ser o primeiro programa a ser passado devido as regras de comb
 primeiro resultado é aquele que tem prioridade na definição de campos dos tipos.
 
 Um exemplo simples de código gerado é apresentado pelas listagens \ref{lst-rust-types-proto-src}
-e \ref{lst-rust-types-rust-out}, onde uma \textit{struct} em Rust é gerada a partir de uma
+e \ref{lst-rust-types-rust-out}, nas quais uma \textit{struct} em Rust é gerada a partir de uma
 \textit{message} em Protocol Buffers. Um ponto a ser comentado é que, apesar de estarmos construindo
 um gerador de código, isso não significa que não possamos utilizar mecânicas de geração da própria
 linguagem objeto. No nosso exemplo, o uso do atributo \texttt{derive} permite que mais código seja
-gerado pelo compilador da linguagem, simplificando o código gerador e facilitando o entendimento
-do mesmo pelos desenvolvedores.
+gerado pelo compilador da linguagem (simplificando o código gerado e facilitando o entendimento
+dos desenvolvedores).
 
 \begin{listing}
 \begin{minted}{protobuf}
@@ -164,7 +164,7 @@ podem ser renomeados com as opções \texttt{baker.api.*\_name}.
 \subsubsection{\texttt{rust-diesel}}
 
 Para demonstrar que é possível integrar uma ORM ao código gerado sem dificuldades, uma
-\textit{layer} foi construida para integrar a ORM \texttt{diesel} \cite{rust:diesel},
+\textit{layer} foi construída para integrar a ORM \texttt{diesel} \cite{rust:diesel},
 uma ORM para bancos relacionais SQL. Para a integração, atributos, \texttt{ImplBlock}s
 e diversas opções são necessários, como pode ser visto nos \cref{anex:blog-spec} e
 \cref{anex:blog-codegen}.
